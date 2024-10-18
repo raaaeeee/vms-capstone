@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import supabase from '../supabaseClient';
 import Sidebar from './Sidebar.jsx';
@@ -9,21 +9,23 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const role = sessionStorage.getItem("role");
+  const [visitorData, setVisitorData] = useState([]);
+  const [expectedVisitors, setExpectedVisitors] = useState('');
+  const [time_in, setTimeIn] = useState('');
+  const [time_out, setTimeOut] = useState('');
+  const [future_visitors,setFutureVisitors] = useState('');
+  const [event, setEvents] = useState([]);
 
   useEffect(() => {
     const fetchSession = async () => {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
-
-      if (error) {
-        console.error('Error fetching session:', error.message);
-        alert('Error fetching session. Please try again later.');
-        navigate('/login');
-      } else if (!session) {
-        navigate('/login');
+      if (role === null) {
         alert('Please login first');
+        navigate('/login');
+      } else {
+        fetch_visitors();
+        fetch_future_visitors();
+        fetch_events();
       }
     };
 
@@ -32,18 +34,75 @@ const Dashboard = () => {
 
   const localizer = momentLocalizer(moment);
 
-  const events = [
-    {
-      title: 'SANGKA 2024',
-      start: new Date(2024, 9, 20, 10, 0), // October 20, 2024 at 10 AM
-      end: new Date(2024, 9, 20, 12, 0),
-    },
-    {
-      title: 'LCO Days',
-      start: new Date(2024, 9, 21, 14, 0), // October 21, 2024 at 2 PM
-      end: new Date(2024, 9, 21, 15, 0),
-    },
-  ];
+  const mappedEvents = event.map(event => ({
+    id: event.event_name, // Use a unique identifier for each event
+    title: event.event_name,
+    start: new Date(event.event_date), // Convert string to Date
+    end: new Date(new Date(event.event_date).getTime() + 60 * 60 * 1000), // Adding 1 hour for the end time
+  }));
+
+
+  const fetch_visitors = async () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); 
+    const dd = String(today.getDate()).padStart(2, '0'); 
+
+    const formattedDate = `${yyyy}-${mm}-${dd}`;
+    try {
+        const { error, data } = await supabase
+            .from('visitors')
+            .select('*')
+            .eq('date', formattedDate);
+
+            console.log(data);
+            const filteredData = data.filter(row => row.time_in === null);
+            setVisitorData(filteredData);
+            const expected_visitors = data.filter(row => row.time_in === null).length;
+            setExpectedVisitors(expected_visitors);
+            const time_in = data.filter(row => row.time_in !== null).length;
+            setTimeIn(time_in);
+            const time_out = data.filter(row => row.time_out !== null).length;
+            setTimeOut(time_out);
+    } catch (error) {
+        alert("An unexpected error occurred.");
+        console.error('Error during registration:', error.message);
+    }
+}
+const fetch_future_visitors = async () => {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0'); 
+  const dd = String(today.getDate()).padStart(2, '0'); 
+
+  const formattedDate = `${yyyy}-${mm}-${dd}`;
+  try {
+      const { error, data } = await supabase
+          .from('visitors')
+          .select('*')
+          console.log(data);
+          const futureData = data.filter(row => row.date != formattedDate).length;
+          setFutureVisitors(futureData);
+
+  } catch (error) {
+      alert("An unexpected error occurred.");
+      console.error('Error during registration:', error.message);
+  }
+}
+
+const fetch_events = async () => {
+  try {
+      const { error, data } = await supabase
+          .from('events')
+          .select('*')
+          setEvents(data);
+        
+  } catch (error) {
+      alert("An unexpected error occurred.");
+      console.error('Error during registration:', error.message);
+  }
+}
+
 
   return (
     <>
@@ -55,25 +114,25 @@ const Dashboard = () => {
             {[
               {
                 title: 'Expected Visitors',
-                count: 11,
+                count: expectedVisitors,
                 icon: '👥',
                 bgColor: 'bg-blue-400',
               },
               {
                 title: "Today's Entries",
-                count: 22,
+                count: time_in,
                 icon: '➡️',
                 bgColor: 'bg-green-400',
               },
               {
                 title: "Today's Exits",
-                count: 18,
+                count: time_out,
                 icon: '⬅️',
                 bgColor: 'bg-yellow-400',
               },
               {
                 title: 'Pending Total Visits',
-                count: 30,
+                count: future_visitors,
                 icon: '⏳',
                 bgColor: 'bg-purple-400',
               },
@@ -99,14 +158,14 @@ const Dashboard = () => {
                 <IoIosPeople size={32} />
               </span>
               <h2 className="text-lg lg:text-xl font-bolder">
-                Today's Visitors
+                Today's Expected Visitors
               </h2>
             </div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto max-h-60 overflow-y-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
-                    {['Visitor No.', 'Name', 'Contact No.', 'Purpose'].map(
+                    {['Name', 'Contact No.', 'Purpose', 'Department'].map(
                       (header, index) => (
                         <th key={index} className="text-left p-2">
                           {header}
@@ -116,15 +175,15 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {Array.from({ length: 9 }, (_, i) => (
-                    <tr key={i} className="border-b">
-                      <td className="p-2">{i + 1}</td>
-                      <td className="p-2">Marc Dominic Gerasmio</td>
-                      <td className="p-2">09090909090</td>
-                      <td className="p-2">Transcript of Records (TOR)</td>
-                    </tr>
-                  ))}
-                </tbody>
+                {visitorData.map((visitor, index) => (
+                  <tr key={index} className="border-b">
+                    <td className="p-2">{visitor.name}</td>
+                    <td className="p-2">{visitor.contact_num}</td>
+                    <td className="p-2">{visitor.visit_purpose}</td>
+                    <td className="p-2">{visitor.department}</td>
+                  </tr>
+                ))}
+              </tbody>
               </table>
             </div>
           </div>
@@ -132,7 +191,7 @@ const Dashboard = () => {
           <div className="w-full bg-white rounded-lg shadow-lg p-4">
             <Calendar
               localizer={localizer}
-              events={events}
+              events={mappedEvents}
               startAccessor="start"
               endAccessor="end"
               style={{ height: '400px' }}

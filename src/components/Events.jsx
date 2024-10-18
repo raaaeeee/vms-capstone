@@ -3,22 +3,56 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { MdEventAvailable } from 'react-icons/md';
-
+import supabase from '../supabaseClient.jsx';
+import { useState, useEffect } from 'react';
 const Events = () => {
+  const [event, setEvents] = useState([]);
+  const [event_name, setEventName] = useState('');
+  const [event_date, setEventDate] = useState('');
+  const [event_location, setEventLocation] = useState('');
+
+
+
+  const mappedEvents = event.map(event => ({
+    id: event.event_name, // Use a unique identifier for each event
+    title: event.event_name,
+    start: new Date(event.event_date), // Convert string to Date
+    end: new Date(new Date(event.event_date).getTime() + 60 * 60 * 1000), // Adding 1 hour for the end time
+  }));
+
+  const add_event = async (e) => {
+    const { data, error } = await supabase
+      .from('events')
+      .insert([
+        {
+          event_name,
+          event_date,
+          event_location
+        },
+      ])
+
+    if (error) {
+      console.error('Error inserting data:', error);
+      alert('Error inserting data');
+    } else {
+      openModal();
+    }
+  };
+
+  const fetch_events = async () => {
+    try {
+        const { error, data } = await supabase
+            .from('events')
+            .select('*')
+            setEvents(data);
+          
+    } catch (error) {
+        alert("An unexpected error occurred.");
+        console.error('Error during registration:', error.message);
+    }
+  }
   const localizer = momentLocalizer(moment);
 
-  const events = [
-    {
-      title: 'SANGKA 2024',
-      start: new Date(2024, 9, 20, 10, 0), // October 20, 2024 at 10 AM
-      end: new Date(2024, 9, 20, 12, 0),
-    },
-    {
-      title: 'LCO Days',
-      start: new Date(2024, 9, 21, 14, 0), // October 21, 2024 at 2 PM
-      end: new Date(2024, 9, 21, 15, 0),
-    },
-  ];
 
   const openModal = () => {
     const modal = document.getElementById('check');
@@ -31,13 +65,18 @@ const Events = () => {
     const modal = document.getElementById('check');
     if (modal) {
       modal.close();
+      window.location.reload();
     }
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    openModal();
+    add_event();
   };
+
+  useEffect(() => {
+    fetch_events();
+  }, []);
 
   return (
     <>
@@ -64,6 +103,8 @@ const Events = () => {
                       id="eventName"
                       type="text"
                       className="grow text-black"
+                      value={event_name}
+                      onChange={(e) => setEventName(e.target.value)}
                     />
                   </label>
                 </div>
@@ -78,6 +119,8 @@ const Events = () => {
                       id="eventDate"
                       type="date"
                       className="grow text-black"
+                      value={event_date}
+                      onChange={(e) => setEventDate(e.target.value)}
                     />
                   </label>
                 </div>
@@ -92,6 +135,8 @@ const Events = () => {
                       id="location"
                       type="text"
                       className="grow text-black"
+                      value={event_location}
+                      onChange={(e) => setEventLocation(e.target.value)}
                     />
                   </label>
                 </div>
@@ -108,7 +153,7 @@ const Events = () => {
             <div className="w-full lg:w-2/3 bg-white rounded-lg shadow-lg p-4">
               <Calendar
                 localizer={localizer}
-                events={events}
+                events={mappedEvents}
                 startAccessor="start"
                 endAccessor="end"
                 style={{ height: '400px' }}

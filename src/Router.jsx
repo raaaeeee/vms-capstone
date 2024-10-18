@@ -7,6 +7,7 @@ import Visitors from './components/Visitors.jsx';
 import Events from './components/Events.jsx';
 import Archives from './components/Archives.jsx';
 
+
 function Router() {
   return (
     <Routes>
@@ -17,6 +18,7 @@ function Router() {
       <Route path="/visitors" element={<Visitors />} />
       <Route path="/events" element={<Events />} />
       <Route path="/archives" element={<Archives />} />
+
     </Routes>
   );
 }

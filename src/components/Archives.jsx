@@ -2,8 +2,107 @@ import Sidebar from './Sidebar.jsx';
 import { RiArchiveStackFill } from 'react-icons/ri';
 import { FaFilePdf } from 'react-icons/fa';
 import { MdEventAvailable } from 'react-icons/md';
+import supabase from '../supabaseClient.jsx';
+import { useState, useEffect } from 'react';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
+
 
 const Archives = () => {
+  const [visitorsData, setVisitorData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [total_visitors, setTotalVisitors] = useState('');
+  const [date, setDate] = useState('');
+  const [search, setSearch] = useState('');
+
+  const fetch_visitors = async () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); 
+    const dd = String(today.getDate()).padStart(2, '0'); 
+
+    const formattedDate = `${yyyy}-${mm}-${dd}`;
+    try {
+      const { error, data } = await supabase
+        .from('visitors')
+        .select('*');
+      
+      if (error) throw error;
+
+      setVisitorData(data);
+      setTotalVisitors(data.length);
+      setFilteredData(data); 
+
+    } catch (error) {
+      alert("An unexpected error occurred.");
+      console.error('Error during fetching visitors:', error.message);
+    }
+  }
+
+  const filter_date = async (date) => {
+    if (date === '') {
+      fetch_visitors();
+    } else {
+      const { error, data } = await supabase
+        .from('visitors')
+        .select('*')
+        .eq('date', date);
+      
+      if (error) throw error;
+
+      setVisitorData(data);
+      setFilteredData(data);  
+    }
+  };
+
+  useEffect(() => {
+    fetch_visitors();
+  }, []);
+
+  useEffect(() => {
+    const searchTerm = search.toLowerCase();
+    const newData = visitorsData.filter(data =>
+      data.name ? data.name.toLowerCase().includes(searchTerm) : false
+    );
+    setFilteredData(newData);  
+  }, [search, visitorsData]); 
+
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
+  };
+
+  function extractTimeFromDate(timestamp) {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  }
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(12);
+    doc.text('Visitor Archives', 14, 16);
+    
+    const tableData = filteredData.map(visitor => [
+      visitor.name,
+      visitor.contact_num,
+      visitor.visit_purpose,
+      visitor.department,
+      visitor.vehicle,
+      visitor.time_in ? extractTimeFromDate(visitor.time_in) : '',
+      visitor.time_out ? extractTimeFromDate(visitor.time_out) : '',
+      visitor.date,
+    ]);
+
+
+    doc.autoTable({
+      head: [['Name', 'Contact No.', 'Purpose of Visit', 'Department', 'Vehicle', 'Time In', 'Time Out', 'Date']],
+      body: tableData,
+      startY: 30,
+    });
+
+    doc.save('visitor_archives.pdf');
+  };
+
   return (
     <>
       <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 font-mono">
@@ -21,7 +120,7 @@ const Archives = () => {
               </div>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 w-full sm:w-auto">
                 <label className="input input-bordered flex items-center gap-2 w-full sm:w-auto">
-                  <input type="text" className="grow" placeholder="Search" />
+                  <input type="text" className="grow" placeholder="Search" onChange={handleSearchChange} />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 16 16"
@@ -35,7 +134,8 @@ const Archives = () => {
                     />
                   </svg>
                 </label>
-                <button className="w-full sm:w-auto px-4 py-2 font-medium text-white bg-orange-500 rounded hover:bg-orange-400 flex items-center justify-center">
+                <button className="w-full sm:w-auto px-4 py-2 font-medium text-white bg-orange-500 rounded hover:bg-orange-400 flex items-center justify-center"
+                 onClick={exportToPDF} >
                   <FaFilePdf className="me-1" size={22} />
                   Export as PDF
                 </button>
@@ -45,11 +145,11 @@ const Archives = () => {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 mt-8">
               <label className="input flex items-center gap-3 w-full sm:w-auto">
                 <MdEventAvailable size={20} /> :
-                <input type="date" required />
+                <input type="date" required onChange={(e) => filter_date(e.target.value)} />
               </label>
               <label className="input flex items-center w-full sm:w-auto">
                 Total No. of Visitors : &nbsp;
-                <input placeholder="9999" type="text" disabled />
+                <input placeholder={total_visitors} type="text" disabled />
               </label>
             </div>
 
@@ -57,10 +157,10 @@ const Archives = () => {
               <table className="w-full text-sm sm:text-base">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left p-2">#</th>
                     <th className="text-left p-2">Name</th>
                     <th className="text-left p-2">Contact No.</th>
                     <th className="text-left p-2">Purpose of Visit</th>
+                    <th className="text-left p-2">Department</th>
                     <th className="text-left p-2">Vehicle</th>
                     <th className="text-left p-2 border-b-4 border-green-400">
                       Time In
@@ -71,18 +171,17 @@ const Archives = () => {
                     <th className="text-left p-2">Date</th>
                   </tr>
                 </thead>
-
                 <tbody>
-                  {Array.from({ length: 13 }, (_, i) => (
-                    <tr key={i} className="border-b">
-                      <td className="p-2">{i + 1}</td>
-                      <td className="p-2">Marc Dominic Gerasmio</td>
-                      <td className="p-2">09090909090</td>
-                      <td className="p-2">Transcript of Records (TOR)</td>
-                      <td className="p-2">Motor</td>
-                      <td className="p-2">7:00 AM</td>
-                      <td className="p-2">7:00 PM</td>
-                      <td className="p-2">10/18/2024</td>
+                  {filteredData.map((visitor, index) => (
+                    <tr key={index} className="border-b">
+                      <td className="p-2">{visitor.name}</td>
+                      <td className="p-2">{visitor.contact_num}</td>
+                      <td className="p-2">{visitor.visit_purpose}</td>
+                      <td className="p-2">{visitor.department}</td>
+                      <td className="p-2">{visitor.vehicle}</td>
+                      <td className="p-2">{visitor.time_in === null ? '' : extractTimeFromDate(visitor.time_in)}</td>
+                      <td className="p-2">{visitor.time_out === null ? '' : extractTimeFromDate(visitor.time_out)}</td>
+                      <td className="p-2">{visitor.date}</td>
                     </tr>
                   ))}
                 </tbody>

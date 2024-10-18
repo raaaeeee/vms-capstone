@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaUser, FaAddressCard, FaCar } from 'react-icons/fa';
 import { MdContactPhone, MdOutlineConfirmationNumber } from 'react-icons/md';
 import supabase from '../supabaseClient';
+import QRCode from 'qrcode';
 
 const VisitorReg = () => {
   const [name, setName] = useState('');
@@ -10,7 +11,10 @@ const VisitorReg = () => {
   const [visitPurpose, setVisitPurpose] = useState('');
   const [vehicle, setVehicle] = useState('');
   const [plateNum, setPlateNum] = useState('');
+  const [date, setDate] = useState('');
+  const [department, setDepartment] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [qrcode, setQrCode] = useState('');
 
   const insertVisitorData = async (e) => {
     e.preventDefault();
@@ -26,6 +30,8 @@ const VisitorReg = () => {
           visit_purpose: visitPurpose,
           vehicle: vehicle,
           plate_num: plateNum,
+          date:date,
+          department:department,
         },
       ])
       .select();
@@ -35,9 +41,19 @@ const VisitorReg = () => {
       alert('Error inserting data');
     } else {
       console.log('Data inserted successfully:', data);
-      openModal();
+      generateQRCode(name);
     }
     setIsLoading(false);
+  };
+
+  const generateQRCode = async (name) => {
+    try {
+      const data = await QRCode.toDataURL(name);
+      setQrCode(data);
+      openModal();
+    } catch (error) {
+      console.error('Error generating QR code:', error);
+    }
   };
 
   const openModal = () => {
@@ -103,7 +119,6 @@ const VisitorReg = () => {
                 />
               </label>
             </div>
-
             <div>
               <label
                 htmlFor="purpose"
@@ -121,23 +136,37 @@ const VisitorReg = () => {
                 required
               ></textarea>
             </div>
-
-            <select className="select select-bordered w-full">
+            <div className="flex flex-col sm:flex-row gap-4">
+            <select className="select select-bordered w-full"
+            onChange={(e) => setDepartment(e.target.value)}>
               <option disabled selected>
                 What department will you visit?
               </option>
+              <option>CAA</option>
               <option>CCIS</option>
               <option>CED</option>
-              <option>CMNS</option>
-              <option>CAA</option>
-              <option>CHASS</option>
               <option>CEGS</option>
-              <option>
-                E ADD DIRI TONG UBANG DEPARTMENT KAY WAKO KAMEMORIZE SAY NAME SA
-                REGISTRAR UG UBAN PANG DEPS
-              </option>
+              <option>CHASS</option>
+              <option>CMNS</option>
+              <option>COFES</option>
+              <option>REGISTRAR</option>
+              <option>NEW ADMIN</option>
+              <option>LIBRARY</option>
             </select>
-
+            <label
+                className="block text-sm text-gray-700 mb-1 font-bold"
+              >
+               Date of Appointment
+              </label>
+            <div class="g-gray">
+            <input 
+              onChange={(e) => setDate(e.target.value)}
+              placeholder="Select Date of Appointment"
+              type="date" 
+              class="px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue"
+            />
+          </div>
+          </div>
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1">
                 <label className="input input-bordered flex items-center gap-2">
@@ -181,7 +210,7 @@ const VisitorReg = () => {
       </div>
 
       <dialog id="error_modal" className="modal">
-        <div className="modal-box">
+        <div className="modal-box w-60">
           <form method="dialog">
             <button
               className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
@@ -191,8 +220,10 @@ const VisitorReg = () => {
             </button>
           </form>
           <h3 className="font-bold text-lg">Register Successfully</h3>
-          <p className="py-4">
-            Registration are successful. Here's your QR Code:
+          <p className="py-4">Here's your QR Code:
+            <div style={{ marginTop: '20px' }}>
+           <img src={qrcode} alt="QR Code" style={{ width: '200px', height: '200px' }} />
+            </div>
           </p>
         </div>
       </dialog>

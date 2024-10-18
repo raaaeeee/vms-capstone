@@ -19,7 +19,7 @@ const Sidebar = () => {
       alert('Error during logout. Please try again.');
       setIsLoading(false);
     } else {
-      navigate('/login');
+      navigate('/');
     }
     setIsLoading(false);
   };

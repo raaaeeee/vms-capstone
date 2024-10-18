@@ -13,20 +13,23 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
+    const { data } = await supabase
+    .from('users')
+    .select('*')
+    .eq('email', email)
+    .single();
+
+
+    if (data && data.password === password && data.email === email) {
+    const role = data.role;
+    sessionStorage.setItem('role', role);
+    navigate("/dashboard");
+    }
+    else {
+      openModal();
+    }
 
     setIsLoading(false);
-
-    if (error) {
-      console.error('Login failed:', error.message);
-      openModal();
-    } else {
-      console.log('User data:', data);
-      navigate('/dashboard');
-    }
   };
 
   const openModal = () => {
