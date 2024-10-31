@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard.jsx';
 import Visitors from './components/Visitors.jsx';
 import Events from './components/Events.jsx';
 import Archives from './components/Archives.jsx';
+import Notifications from './components/Notifications.jsx';
 
 
 function Router() {
@@ -18,7 +19,7 @@ function Router() {
       <Route path="/visitors" element={<Visitors />} />
       <Route path="/events" element={<Events />} />
       <Route path="/archives" element={<Archives />} />
-
+      <Route path="/notifications" element={<Notifications />} />
     </Routes>
   );
 }

@@ -29,10 +29,14 @@ const Archives = () => {
       
       if (error) throw error;
 
-      setVisitorData(data);
-      setTotalVisitors(data.length);
-      setFilteredData(data); 
+      const sortedData = data.sort((a, b) => {
+        return new Date(b.time_in) - new Date(a.time_in);
+      });
+  
 
+      setVisitorData(sortedData);
+      setTotalVisitors(sortedData.length);
+      setFilteredData(sortedData); 
     } catch (error) {
       alert("An unexpected error occurred.");
       console.error('Error during fetching visitors:', error.message);
@@ -49,9 +53,12 @@ const Archives = () => {
         .eq('date', date);
       
       if (error) throw error;
-
-      setVisitorData(data);
-      setFilteredData(data);  
+      const sortedData = data.sort((a, b) => {
+        return new Date(b.time_in) - new Date(a.time_in);
+      });
+  
+      setVisitorData(sortedData);
+      setFilteredData(sortedData);  
     }
   };
 

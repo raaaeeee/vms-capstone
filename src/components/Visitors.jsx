@@ -20,7 +20,11 @@ const [visitorsData, setVisitorData] = useState([]);
             .select('*')
             .eq('date', formattedDate);
             const filteredData = data.filter(row => row.time_in != null);
-            setVisitorData(filteredData);
+            const sortedData = filteredData.sort((a, b) => {
+              return new Date(b.time_in) - new Date(a.time_in);
+            });
+        
+            setVisitorData(sortedData);
 
     } catch (error) {
         alert("An unexpected error occurred.");

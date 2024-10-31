@@ -23,7 +23,13 @@ const Login = () => {
     if (data && data.password === password && data.email === email) {
     const role = data.role;
     sessionStorage.setItem('role', role);
-    navigate("/dashboard");
+    if (role === "ADMIN"){
+      navigate("/dashboard");
+    }
+    else {
+      navigate("/notifications");
+    }
+   
     }
     else {
       openModal();

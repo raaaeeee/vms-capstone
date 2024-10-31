@@ -15,6 +15,7 @@ const VisitorReg = () => {
   const [department, setDepartment] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [qrcode, setQrCode] = useState('');
+  const [visitorType, setVisitorType] = useState('');
 
   const insertVisitorData = async (e) => {
     e.preventDefault();
@@ -32,6 +33,7 @@ const VisitorReg = () => {
           plate_num: plateNum,
           date:date,
           department:department,
+          type_of_visitor: visitorType,
         },
       ])
       .select();
@@ -50,6 +52,7 @@ const VisitorReg = () => {
     try {
       const data = await QRCode.toDataURL(name);
       setQrCode(data);
+      console.log(data);
       openModal();
     } catch (error) {
       console.error('Error generating QR code:', error);
@@ -60,6 +63,7 @@ const VisitorReg = () => {
     const modal = document.getElementById('error_modal');
     if (modal) {
       modal.showModal();
+
     }
   };
 
@@ -67,6 +71,19 @@ const VisitorReg = () => {
     const modal = document.getElementById('error_modal');
     if (modal) {
       modal.close();
+      window.location.reload();
+    }
+  };
+  const saveimage = () => {
+    if (qrcode.startsWith('data:image/png;base64,' || qrcode.startsWith('data:image/jpeg;base64,' ))) {
+      const link = document.createElement('a');
+      link.href = qrcode; 
+      link.download = `qr-code.jpg`; 
+      document.body.appendChild(link); 
+      link.click(); 
+      document.body.removeChild(link); 
+    } else {
+      console.error('Invalid QR code link');
     }
   };
 
@@ -74,9 +91,21 @@ const VisitorReg = () => {
     <>
       <div className="flex items-center justify-center min-h-screen bg-green-900 font-mono px-4 sm:px-0">
         <div className="w-full sm:w-3/4 lg:w-2/5 p-5 bg-white rounded-lg">
-          <h1 className="text-xl sm:text-2xl font-bold mb-6 text-center">
+        <div className='flex flex-col sm:flex-row gap-4'>
+        <h1 className="text-xl sm:text-2xl font-bold mb-6 text-cente flex-1">
             Visitor Registration
           </h1>
+          <select className="select select-bordered " onChange={(e) => setVisitorType(e.target.value)}
+         >
+              <option disabled selected>
+                Type of Visitor
+              </option>
+              <option>Family</option>
+              <option>Organization</option>
+              <option>VIP</option>
+              <option>Others</option>
+            </select>
+        </div>
           <form className="space-y-4" onSubmit={insertVisitorData}>
             <div className>
               <label className="input input-bordered flex items-center gap-2">
@@ -137,11 +166,11 @@ const VisitorReg = () => {
               ></textarea>
             </div>
             <div className="flex flex-col sm:flex-row gap-4">
-            <select className="select select-bordered w-full"
+            <select className="select select-bordered w-full flex-1"
             onChange={(e) => setDepartment(e.target.value)}>
-              <option disabled selected>
-                What department will you visit?
-              </option>
+              <option>REGISTRAR</option>
+              <option>NEW ADMIN</option>
+              <option>LIBRARY</option>
               <option>CAA</option>
               <option>CCIS</option>
               <option>CED</option>
@@ -149,23 +178,18 @@ const VisitorReg = () => {
               <option>CHASS</option>
               <option>CMNS</option>
               <option>COFES</option>
-              <option>REGISTRAR</option>
-              <option>NEW ADMIN</option>
-              <option>LIBRARY</option>
             </select>
             <label
-                className="block text-sm text-gray-700 mb-1 font-bold"
+                className="text-sm text-gray-700 font-bold mb-2"
               >
-               Date of Appointment
-              </label>
-            <div class="g-gray">
+               Appointment
             <input 
               onChange={(e) => setDate(e.target.value)}
               placeholder="Select Date of Appointment"
               type="date" 
-              class="px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue"
+              class="ms-2 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue"
             />
-          </div>
+           </label>
           </div>
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1">
@@ -223,6 +247,11 @@ const VisitorReg = () => {
           <p className="py-4">Here's your QR Code:
             <div style={{ marginTop: '20px' }}>
            <img src={qrcode} alt="QR Code" style={{ width: '200px', height: '200px' }} />
+           <button
+           onClick={saveimage}
+                className="mt-5 w-full sm:w-auto px-12 py-3 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
+                Save QR Code
+              </button>
             </div>
           </p>
         </div>

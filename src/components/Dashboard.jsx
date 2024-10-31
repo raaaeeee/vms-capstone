@@ -72,23 +72,27 @@ const Dashboard = () => {
 const fetch_future_visitors = async () => {
   const today = new Date();
   const yyyy = today.getFullYear();
-  const mm = String(today.getMonth() + 1).padStart(2, '0'); 
-  const dd = String(today.getDate()).padStart(2, '0'); 
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
 
   const formattedDate = `${yyyy}-${mm}-${dd}`;
+  
   try {
-      const { error, data } = await supabase
-          .from('visitors')
-          .select('*')
-          console.log(data);
-          const futureData = data.filter(row => row.date != formattedDate).length;
-          setFutureVisitors(futureData);
-
+    const { data, error } = await supabase
+      .from('visitors')
+      .select('*');
+      
+    if (error) {
+      throw error;
+    }
+    const futureData = data.filter(row => new Date(row.date) > new Date(formattedDate));
+    setFutureVisitors(futureData.length);
   } catch (error) {
-      alert("An unexpected error occurred.");
-      console.error('Error during registration:', error.message);
+    alert("An unexpected error occurred.");
+    console.error('Error during registration:', error.message);
   }
-}
+};
+
 
 const fetch_events = async () => {
   try {
@@ -165,7 +169,7 @@ const fetch_events = async () => {
               <table className="w-full">
                 <thead>
                   <tr className="border-b">
-                    {['Name', 'Contact No.', 'Purpose', 'Department'].map(
+                    {['Name', 'Contact No.', 'Purpose', 'Department', 'Type of Visit'].map(
                       (header, index) => (
                         <th key={index} className="text-left p-2">
                           {header}
@@ -181,6 +185,7 @@ const fetch_events = async () => {
                     <td className="p-2">{visitor.contact_num}</td>
                     <td className="p-2">{visitor.visit_purpose}</td>
                     <td className="p-2">{visitor.department}</td>
+                    <td className="p-2">{visitor.type_of_visitor}</td>
                   </tr>
                 ))}
               </tbody>
