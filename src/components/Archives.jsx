@@ -169,6 +169,8 @@ const Archives = () => {
                     <th className="text-left p-2">Purpose of Visit</th>
                     <th className="text-left p-2">Department</th>
                     <th className="text-left p-2">Vehicle</th>
+                    <th className="text-left p-2">Plate Number</th>
+                    <th className="text-left p-2">Type of Visitor</th>
                     <th className="text-left p-2 border-b-4 border-green-400">
                       Time In
                     </th>
@@ -181,14 +183,16 @@ const Archives = () => {
                 <tbody>
                   {filteredData.map((visitor, index) => (
                     <tr key={index} className="border-b">
-                      <td className="p-2">{visitor.name}</td>
-                      <td className="p-2">{visitor.contact_num}</td>
-                      <td className="p-2">{visitor.visit_purpose}</td>
-                      <td className="p-2">{visitor.department}</td>
-                      <td className="p-2">{visitor.vehicle}</td>
-                      <td className="p-2">{visitor.time_in === null ? '' : extractTimeFromDate(visitor.time_in)}</td>
-                      <td className="p-2">{visitor.time_out === null ? '' : extractTimeFromDate(visitor.time_out)}</td>
-                      <td className="p-2">{visitor.date}</td>
+                      <td className="p-1">{visitor.name}</td>
+                      <td className="p-1">{visitor.contact_num}</td>
+                      <td className="p-1">{visitor.visit_purpose}</td>
+                      <td className="p-1">{visitor.department}</td>
+                      <td className="p-1">{visitor.vehicle}</td>
+                      <td className="p-1">{visitor.plate_num}</td>
+                      <td className="p-1">{visitor.type_of_visitor}</td>
+                      <td className="p-1">{visitor.time_in === null ? '' : extractTimeFromDate(visitor.time_in)}</td>
+                      <td className="p-1">{visitor.time_out === null ? '' : extractTimeFromDate(visitor.time_out)}</td>
+                      <td className="p-1">{visitor.date}</td>
                     </tr>
                   ))}
                 </tbody>
