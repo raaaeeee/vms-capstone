@@ -92,13 +92,6 @@ const Sidebar = () => {
               </NavLink>
             </li>
           </ul>
-
-          <button className="hidden lg:flex items-center hover:bg-green-700 p-2 rounded mt-10">
-            <span className="mr-2">
-              <FaUser size={15} />
-            </span>
-            User Profile
-          </button>
           <button
             onClick={() => openModal()}
             className="hidden lg:flex items-center text-sm hover:bg-green-700 rounded p-2"
