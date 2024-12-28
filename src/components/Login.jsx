@@ -23,10 +23,11 @@ const Login = () => {
     if (data && data.password === password && data.email === email) {
     const role = data.role;
     sessionStorage.setItem('role', role);
-    if (role === "ADMIN"){
+    if (role === "ADMIN") {
       navigate("/dashboard");
-    }
-    else {
+    } else if (role === "HEADSECURITY") {
+      navigate("/security");
+    } else {
       navigate("/notifications");
     }
    
