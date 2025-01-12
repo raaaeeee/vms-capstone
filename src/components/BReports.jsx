@@ -18,6 +18,8 @@ const BReports = () => {
   const [selectedVisitor, setSelectedVisitor] = useState(null);
   const [newStatus, setNewStatus] = useState('');
   const [reason, setReason] = useState('');
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const [selectedYear, setSelectedYear] = useState('');
   const role = sessionStorage.getItem('role');
 
   const fetch_visitors = async () => {
@@ -37,6 +39,34 @@ const BReports = () => {
       console.error('Error during fetching visitors:', error.message);
     }
   };
+
+  useEffect(() => {
+    fetch_visitors();
+  }, []);
+
+  useEffect(() => {
+    const filtered = visitorsData.filter(visitor => {
+      const date = new Date(visitor.time_in);
+      const month = date.getMonth() + 1; // Months are 0-indexed
+      const year = date.getFullYear();
+
+      const matchesMonth = selectedMonth ? month === parseInt(selectedMonth, 10) : true;
+      const matchesYear = selectedYear ? year === parseInt(selectedYear, 10) : true;
+
+      return matchesMonth && matchesYear;
+    });
+
+    setFilteredData(filtered);
+  }, [selectedMonth, selectedYear, visitorsData]);
+
+  const handleMonthChange = (e) => {
+    setSelectedMonth(e.target.value);
+  };
+
+  const handleYearChange = (e) => {
+    setSelectedYear(e.target.value);
+  };
+
 
   const updateVisitorStatus = async () => {
     if (!selectedVisitor || !newStatus) return;
@@ -176,6 +206,30 @@ const BReports = () => {
                     />
                   </svg>
                 </label>
+                <select
+                  className="p-2 border rounded"
+                  value={selectedMonth}
+                  onChange={handleMonthChange}
+                >
+                  <option value="">All Months</option>
+                  {Array.from({ length: 12 }, (_, i) => (
+                    <option key={i + 1} value={i + 1}>
+                      {new Date(0, i).toLocaleString('default', { month: 'long' })}
+                    </option>
+                  ))}
+                </select>
+                <select
+                  className="p-2 border rounded"
+                  value={selectedYear}
+                  onChange={handleYearChange}
+                >
+                  <option value="">All Years</option>
+                  {[2022, 2023, 2024, 2025].map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
                 <button
                   className="w-full sm:w-auto px-4 py-2 font-medium text-white bg-orange-500 rounded hover:bg-orange-400 flex items-center justify-center"
                   onClick={() => exportToPDF()}

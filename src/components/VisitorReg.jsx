@@ -33,6 +33,13 @@ const VisitorReg = () => {
     e.preventDefault();
     setIsLoading(true);
 
+    const isBlocked = await checkNameInBlock(name);
+    if (isBlocked) {
+      alert('Entered Name is blocked. Contact Administration for unblocking');
+      setIsLoading(false);
+      return;
+    }
+
     const { data, error } = await supabase
       .from('visitors')
       .insert([
@@ -63,6 +70,13 @@ const VisitorReg = () => {
   const registerFamily = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+
+    const isBlocked = await checkNameInBlock(name);
+    if (isBlocked) {
+      alert('Entered Name is blocked. Contact Administration for unblocking');
+      setIsLoading(false);
+      return;
+    }
 
     const { data, error } = await supabase
       .from('visitors')
@@ -98,6 +112,13 @@ const VisitorReg = () => {
     e.preventDefault();
     setIsLoading(true);
 
+    const isBlocked = await checkNameInBlock(name);
+    if (isBlocked) {
+      alert('Entered Name is blocked. Contact Administration for unblocking');
+      setIsLoading(false);
+      return;
+    }
+
     const { data, error } = await supabase
       .from('visitors')
       .insert([
@@ -132,6 +153,12 @@ const VisitorReg = () => {
   const registerVIP = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    const isBlocked = await checkNameInBlock(name);
+    if (isBlocked) {
+      alert('Entered Name is blocked. Contact Administration for unblocking');
+      setIsLoading(false);
+      return;
+    }
 
     const { data, error } = await supabase
       .from('visitors')
@@ -162,6 +189,20 @@ const VisitorReg = () => {
       generateQRCode(name);
     }
     setIsLoading(false);
+  };
+  const checkNameInBlock = async (name) => {
+    const { data, error } = await supabase
+      .from('block')
+      .select('*')
+      .eq('name', name);
+  
+    if (error) {
+      console.error('Error checking block table:', error);
+      alert('Error checking block table');
+      return false;
+    }
+  
+    return data.length > 0; 
   };
 
 
@@ -270,10 +311,262 @@ const VisitorReg = () => {
               <option>Family</option>
               <option>Organization</option>
               <option>VIP</option>
+              <option>Attendee</option>
+              <option>Guest</option>
               <option>Others</option>
             </select>
         </div>
           <form className="space-y-4" onSubmit={insertVisitorData}>
+          {visitorType === 'Guest' && (
+            <>
+            <div className>
+              <label className="input input-bordered flex items-center gap-2">
+                <FaUser className="h-5 w-5 opacity-70" />
+                <input
+                  type="text"
+                  className="grow py-2"
+                  placeholder="Fullname"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </label>
+            </div>
+
+            <div>
+              <label className="input input-bordered flex items-center gap-2">
+                <FaAddressCard className="h-5 w-5 opacity-70" />
+                <input
+                  type="text"
+                  className="grow py-2"
+                  placeholder="Address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  required
+                />
+              </label>
+            </div>
+
+            <div>
+              <label className="input input-bordered flex items-center gap-2">
+                <MdContactPhone className="h-5 w-5 opacity-70" />
+                <input
+                  type="text"
+                  className="grow py-2"
+                  placeholder="Contact No."
+                  value={contactNum}
+                  onChange={(e) => setContactNum(e.target.value)}
+                  required
+                />
+              </label>
+            </div>
+            <div>
+              <label
+                htmlFor="purpose"
+                className="block text-sm text-gray-700 mb-1 font-bold"
+              >
+                Purpose of Visit
+              </label>
+              <textarea
+                id="purpose"
+                name="purpose"
+                rows={4}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-300"
+                value={visitPurpose}
+                onChange={(e) => setVisitPurpose(e.target.value)}
+                required
+              ></textarea>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4">
+            <select className="select select-bordered w-full flex-1"
+            onChange={(e) => setDepartment(e.target.value)}>
+              <option>REGISTRAR</option>
+              <option>NEW ADMIN</option>
+              <option>LIBRARY</option>
+              <option>CAA</option>
+              <option>CCIS</option>
+              <option>CED</option>
+              <option>CEGS</option>
+              <option>CHASS</option>
+              <option>CMNS</option>
+              <option>COFES</option>
+            </select>
+            <label
+                className="text-sm text-gray-700 font-bold mb-2"
+              >
+               Appointment
+            <input 
+              onChange={(e) => setDate(e.target.value)}
+              placeholder="Select Date of Appointment"
+              type="date" 
+              class="ms-2 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue"
+            />
+           </label>
+          </div>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1">
+                <label className="input input-bordered flex items-center gap-2">
+                  <FaCar className="h-5 w-5 opacity-70" />
+                  <input
+                    type="text"
+                    className="grow py-2"
+                    placeholder="Vehicle"
+                    value={vehicle}
+                    onChange={(e) => setVehicle(e.target.value)}
+                    required
+                  />
+                </label>
+              </div>
+              <div className="flex-1">
+                <label className="input input-bordered flex items-center gap-2">
+                  <MdOutlineConfirmationNumber className="h-5 w-5 opacity-70" />
+                  <input
+                    type="text"
+                    className="grow py-2"
+                    placeholder="Plate No."
+                    value={plateNum}
+                    onChange={(e) => setPlateNum(e.target.value)}
+                    required
+                  />
+                </label>
+              </div>
+            </div>
+            <div className="flex justify-center content-center">
+              <button
+                type="submit"
+                className="mt-5 w-full sm:w-auto px-12 py-3 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Loading...' : 'Register'}
+              </button>
+            </div>
+            </>
+          )}
+          {visitorType === 'Attendee' && (
+            <>
+            <div className>
+              <label className="input input-bordered flex items-center gap-2">
+                <FaUser className="h-5 w-5 opacity-70" />
+                <input
+                  type="text"
+                  className="grow py-2"
+                  placeholder="Fullname"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+              </label>
+            </div>
+
+            <div>
+              <label className="input input-bordered flex items-center gap-2">
+                <FaAddressCard className="h-5 w-5 opacity-70" />
+                <input
+                  type="text"
+                  className="grow py-2"
+                  placeholder="Address"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  required
+                />
+              </label>
+            </div>
+
+            <div>
+              <label className="input input-bordered flex items-center gap-2">
+                <MdContactPhone className="h-5 w-5 opacity-70" />
+                <input
+                  type="text"
+                  className="grow py-2"
+                  placeholder="Contact No."
+                  value={contactNum}
+                  onChange={(e) => setContactNum(e.target.value)}
+                  required
+                />
+              </label>
+            </div>
+            <div>
+              <label
+                htmlFor="purpose"
+                className="block text-sm text-gray-700 mb-1 font-bold"
+              >
+                Purpose of Visit
+              </label>
+              <textarea
+                id="purpose"
+                name="purpose"
+                rows={4}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-300"
+                value={visitPurpose}
+                onChange={(e) => setVisitPurpose(e.target.value)}
+                required
+              ></textarea>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4">
+            <select className="select select-bordered w-full flex-1"
+            onChange={(e) => setDepartment(e.target.value)}>
+              <option>REGISTRAR</option>
+              <option>NEW ADMIN</option>
+              <option>LIBRARY</option>
+              <option>CAA</option>
+              <option>CCIS</option>
+              <option>CED</option>
+              <option>CEGS</option>
+              <option>CHASS</option>
+              <option>CMNS</option>
+              <option>COFES</option>
+            </select>
+            <label
+                className="text-sm text-gray-700 font-bold mb-2"
+              >
+               Appointment
+            <input 
+              onChange={(e) => setDate(e.target.value)}
+              placeholder="Select Date of Appointment"
+              type="date" 
+              class="ms-2 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue"
+            />
+           </label>
+          </div>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1">
+                <label className="input input-bordered flex items-center gap-2">
+                  <FaCar className="h-5 w-5 opacity-70" />
+                  <input
+                    type="text"
+                    className="grow py-2"
+                    placeholder="Vehicle"
+                    value={vehicle}
+                    onChange={(e) => setVehicle(e.target.value)}
+                    required
+                  />
+                </label>
+              </div>
+              <div className="flex-1">
+                <label className="input input-bordered flex items-center gap-2">
+                  <MdOutlineConfirmationNumber className="h-5 w-5 opacity-70" />
+                  <input
+                    type="text"
+                    className="grow py-2"
+                    placeholder="Plate No."
+                    value={plateNum}
+                    onChange={(e) => setPlateNum(e.target.value)}
+                    required
+                  />
+                </label>
+              </div>
+            </div>
+            <div className="flex justify-center content-center">
+              <button
+                type="submit"
+                className="mt-5 w-full sm:w-auto px-12 py-3 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Loading...' : 'Register'}
+              </button>
+            </div>
+            </>
+          )}
           {visitorType === 'Others' && (
             <>
             <div className>

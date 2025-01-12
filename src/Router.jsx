@@ -12,6 +12,8 @@ import BEvents from './components/BEvents.jsx';
 import BReports from './components/BReports.jsx';
 import BVisitorLog from './components/BVisitorLog.jsx';
 import Security from './components/Security.jsx';
+import Blocklist from './components/Blocklist.jsx';
+import VisitorForm from './components/VisitorForm.jsx';
 
 
 function Router() {
@@ -30,6 +32,9 @@ function Router() {
       <Route path="/breports" element={<BReports />} />
       <Route path="/bvisitor" element={<BVisitorLog />} />
       <Route path="/security" element={<Security />} />
+      <Route path="/blocklist" element={<Blocklist />} />
+
+      <Route path="/visitorform" element={<VisitorForm />} />
     </Routes>
   );
 }

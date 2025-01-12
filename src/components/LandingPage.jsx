@@ -11,6 +11,12 @@ const LandingPage = () => {
     navigate('/registration');
   };
 
+  
+  const navLog = () => {
+    navigate('/visitorform');
+  };
+
+
   return (
     <>
       <div
@@ -30,7 +36,7 @@ const LandingPage = () => {
               appointment system. Schedule and track visits effortlessly to
               enhance efficiency and improve experience.
             </p>
-            <div className="flex flex-col sm:flex-row justify-center content-center gap-4 sm:gap-10">
+            <div className="flex flex-col sm:flex-row justify-center content-center gap-4 sm:gap-10 mb-3">
               <button
                 className="w-full sm:w-64 px-4 py-3 font-medium text-white bg-green-800 rounded-lg hover:bg-green-700"
                 onClick={navAdmin}
@@ -42,6 +48,14 @@ const LandingPage = () => {
                 onClick={navVisitor}
               >
                 Visitor
+              </button>
+            </div>
+            <div className="flex flex-col sm:flex-row justify-center content-center gap-4 sm:gap-10">
+              <button
+                className="w-full sm:w-64 px-4 py-3 font-medium text-white bg-yellow-500 rounded-lg hover:bg-yellow-700"
+                onClick={navLog}
+              >
+               Visitor Log
               </button>
             </div>
           </div>

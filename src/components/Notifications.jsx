@@ -9,9 +9,9 @@ const Notifications = () => {
   const navigate = useNavigate();
   const role = sessionStorage.getItem('role');
   const [visitorData, setVisitorData] = useState([]);
-  const [expectedVisitors, setExpectedVisitors] = useState('');
-  const [time_in, setTimeIn] = useState('');
-  const [time_out, setTimeOut] = useState('');
+  const [expectedVisitors, setExpectedVisitors] = useState([]);
+  const [expectedCount, setExpectedCount] = useState('');
+  const [pendingCount, setPendingCount] = useState('');
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -20,6 +20,7 @@ const Notifications = () => {
         navigate('/login');
       } else {
         fetch_visitors();
+        fetch_visitorsall();
       }
     };
 
@@ -28,7 +29,7 @@ const Notifications = () => {
 
   const fetch_visitors = async () => {
     const today = new Date();
-    const formattedDate = today.toISOString().split('T')[0]; // YYYY-MM-DD format
+    const formattedDate = today.toISOString().split('T')[0];
 
     try {
       const { data, error } = await supabase
@@ -41,10 +42,27 @@ const Notifications = () => {
 
       const sortedData = data.sort((a, b) => new Date(b.time_in) - new Date(a.time_in));
       setVisitorData(sortedData);
+      setExpectedCount(sortedData.length)
+    } catch (error) {
+      alert('An unexpected error occurred.');
+      console.error('Error during registration:', error.message);
+    }
+  };
+
+  const fetch_visitorsall = async () => {
+    const today = new Date();
+
+    try {
+      const { data, error } = await supabase
+        .from('visitors')
+        .select('*')
+        .eq('department', role);
+
+      if (error) throw error;
+
       const filteredData = data.filter(row => row.time_in === null);
-      setExpectedVisitors(filteredData.length);
-      setTimeIn(data.filter(row => row.time_in !== null).length);
-      setTimeOut(data.filter(row => row.time_out !== null).length);
+      setExpectedVisitors(filteredData);
+      setPendingCount(filteredData.length)
     } catch (error) {
       alert('An unexpected error occurred.');
       console.error('Error during registration:', error.message);
@@ -65,25 +83,19 @@ const Notifications = () => {
       <div className="flex-1 p-4 lg:p-8 ml-0 lg:ml-64 transition-all duration-300 bg-gray-100">
           <main className="h-[80vh] p-4 lg:p-8">
             {/* Visitor Data Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 lg:gap-6 mb-8">
               {[
                 {
-                  title: 'Expected Visitors',
-                  count: expectedVisitors,
-                  icon: '👥',
+                  title: "Expected Visitors",
+                  count: expectedCount,
+                  icon: '➡️',
                   bgColor: 'bg-blue-400',
                 },
                 {
-                  title: "Today's Entries",
-                  count: time_in,
-                  icon: '➡️',
-                  bgColor: 'bg-green-400',
-                },
-                {
-                  title: "Today's Exits",
-                  count: time_out,
+                  title: "Pending Visitors",
+                  count: pendingCount,
                   icon: '⬅️',
-                  bgColor: 'bg-yellow-400',
+                  bgColor: 'bg-violet-400',
                 },
               ].map((item, index) => (
                 <div
@@ -131,6 +143,38 @@ const Notifications = () => {
                         <td className="p-2">
                           {visitor.time_out ? new Date(visitor.time_out).toLocaleTimeString() : ''}
                         </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div className="w-full bg-white rounded-lg shadow-lg p-4 lg:p-6">
+              <div className="flex items-center justify-center mb-4">
+                <IoIosPeople size={32} className="mr-2" />
+                <h2 className="text-lg lg:text-xl font-bold">Pending List</h2>
+              </div>
+              <div className="overflow-x-auto max-h-60 overflow-y-auto">
+                <table className="w-full table-auto">
+                  <thead>
+                    <tr className="border-b">
+                      {['Name', 'Contact No.', 'Address', 'Purpose',].map(
+                        (header, index) => (
+                          <th key={index} className="text-left p-2">
+                            {header}
+                          </th>
+                        )
+                      )}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {expectedVisitors.map((visitor, index) => (
+                      <tr key={index} className="border-b">
+                        <td className="p-2">{visitor.name}</td>
+                        <td className="p-2">{visitor.contact_num}</td>
+                        <td className="p-2">{visitor.address}</td>
+                        <td className="p-2">{visitor.visit_purpose}</td>
                       </tr>
                     ))}
                   </tbody>
