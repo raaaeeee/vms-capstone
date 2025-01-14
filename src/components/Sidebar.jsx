@@ -10,6 +10,7 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const role = sessionStorage.getItem("role");
 
   const handleLogout = async () => {
     setIsLoading(true);
@@ -91,6 +92,13 @@ const Sidebar = () => {
                 Archives
               </NavLink>
             </li>
+            <li className="p-2 hover:bg-green-700 rounded">
+            {role !== "GUARD" && (
+              <NavLink to="/ablocklist" className="block">
+                Blocklist
+              </NavLink>
+            )}
+          </li>
           </ul>
           <button
             onClick={() => openModal()}

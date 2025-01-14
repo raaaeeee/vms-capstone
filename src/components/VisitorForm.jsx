@@ -5,23 +5,41 @@ const VisitorForm = () => {
   const [visitorName, setVisitorName] = useState("");
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [isNameNotFoundModalOpen, setIsNameNotFoundModalOpen] = useState(false); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    try {
-      const { error } = await supabase
-        .from('visitors')
-        .update({ status: 'Attended' })
-        .eq('name', visitorName);
-      if (error) throw error;
 
-      // Show the modal on success
+    try {
+
+      const { data: existingVisitors, error: checkError } = await supabase
+        .from("visitors")
+        .select("name")
+        .eq("name", visitorName);
+
+      if (checkError) throw checkError;
+
+      if (existingVisitors.length === 0) {
+ 
+        setIsNameNotFoundModalOpen(true);
+        setLoading(false);
+        return;
+      }
+
+      const { error: updateError } = await supabase
+        .from("visitors")
+        .update({ status: "Attended" })
+        .eq("name", visitorName);
+
+      if (updateError) throw updateError;
+
+  
       setIsModalOpen(true);
     } catch (error) {
-      alert('Failed to update status.');
-      console.error('Error updating visitor status:', error.message);
+      alert("Failed to update status.");
+      console.error("Error updating visitor status:", error.message);
     } finally {
       setLoading(false);
     }
@@ -63,21 +81,9 @@ const VisitorForm = () => {
             {loading ? "Sending..." : "Submit"}
           </button>
         </form>
-
-        {status === "success" && (
-          <div className="mt-4 p-4 text-green-700 bg-green-100 border border-green-300 rounded-md">
-            🎉 Name sent successfully!
-          </div>
-        )}
-
-        {status === "error" && (
-          <div className="mt-4 p-4 text-red-700 bg-red-100 border border-red-300 rounded-md">
-            ❌ Failed to send name. Please try again.
-          </div>
-        )}
       </div>
 
-      {/* Modal */}
+      {/* Success Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white rounded-lg shadow-lg p-6 w-80 text-center">
@@ -85,6 +91,22 @@ const VisitorForm = () => {
             <button
               onClick={() => window.location.reload()}
               className="mt-4 px-4 py-2 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Name Not Found Modal */}
+      {isNameNotFoundModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-80 text-center">
+            <h2 className="text-xl font-bold mb-4">Name Not Found</h2>
+            <p>The entered name does not exist in our records.</p>
+            <button
+              onClick={() => setIsNameNotFoundModalOpen(false)}
+              className="mt-4 px-4 py-2 bg-red-600 text-white font-bold rounded-md hover:bg-red-700"
             >
               Close
             </button>

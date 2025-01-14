@@ -24,6 +24,7 @@ const VisitorReg = () => {
   const [numberofVehicles, setNumberOfVehicles] = useState('');
   const [totalVisitors, setTotalVisitors] = useState('');
   const [vipname, setVipName] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [qrcode, setQrCode] = useState('');
@@ -35,7 +36,7 @@ const VisitorReg = () => {
 
     const isBlocked = await checkNameInBlock(name);
     if (isBlocked) {
-      alert('Entered Name is blocked. Contact Administration for unblocking');
+      setIsModalOpen(true);
       setIsLoading(false);
       return;
     }
@@ -73,7 +74,7 @@ const VisitorReg = () => {
 
     const isBlocked = await checkNameInBlock(name);
     if (isBlocked) {
-      alert('Entered Name is blocked. Contact Administration for unblocking');
+      setIsModalOpen(true);
       setIsLoading(false);
       return;
     }
@@ -114,7 +115,7 @@ const VisitorReg = () => {
 
     const isBlocked = await checkNameInBlock(name);
     if (isBlocked) {
-      alert('Entered Name is blocked. Contact Administration for unblocking');
+      setIsModalOpen(true);
       setIsLoading(false);
       return;
     }
@@ -155,7 +156,7 @@ const VisitorReg = () => {
     setIsLoading(true);
     const isBlocked = await checkNameInBlock(name);
     if (isBlocked) {
-      alert('Entered Name is blocked. Contact Administration for unblocking');
+      setIsModalOpen(true);
       setIsLoading(false);
       return;
     }
@@ -1260,6 +1261,20 @@ const VisitorReg = () => {
           </p>
         </div>
       </dialog>
+
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-80 text-center">
+            <h2 className="text-xl font-bold mb-4">Entered Name is blocked. Contact Administration for unblocking!</h2>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 px-4 py-2 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 };

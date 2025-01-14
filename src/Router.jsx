@@ -7,6 +7,7 @@ import Visitors from './components/Visitors.jsx';
 import Events from './components/Events.jsx';
 import Archives from './components/Archives.jsx';
 import Notifications from './components/Notifications.jsx';
+import ABlocklist from './components/ABlocklist.jsx';
 
 import BEvents from './components/BEvents.jsx';
 import BReports from './components/BReports.jsx';
@@ -27,6 +28,7 @@ function Router() {
       <Route path="/events" element={<Events />} />
       <Route path="/archives" element={<Archives />} />
       <Route path="/notifications" element={<Notifications />} />
+      <Route path="/ablocklist" element={<ABlocklist />} />
 
       <Route path="/bevents" element={<BEvents />} />
       <Route path="/breports" element={<BReports />} />

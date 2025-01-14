@@ -1,4 +1,4 @@
-import BSidebar from './BSidebar.jsx';
+import Sidebar from './Sidebar.jsx';
 import { RiArchiveStackFill } from 'react-icons/ri';
 import { FaFilePdf } from 'react-icons/fa';
 import { MdEventAvailable } from 'react-icons/md';
@@ -8,7 +8,7 @@ import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 
 
-const Blocklist = () => {
+const ABlocklist = () => {
   const [visitorsData, setVisitorData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [total_visitors, setTotalVisitors] = useState('');
@@ -25,8 +25,7 @@ const Blocklist = () => {
     try {
       const { error, data } = await supabase
         .from('block')
-        .select('*')
-        .eq('status', 'Blocked');
+        .select('*');
       
       if (error) throw error;
 
@@ -98,21 +97,27 @@ const Blocklist = () => {
     const doc = new jsPDF();
 
     doc.setFontSize(12);
-    doc.text('Blocklist', 14, 16);
+    doc.text('Visitor Archives', 14, 16);
     
     const tableData = filteredData.map(visitor => [
       visitor.name,
-      visitor.reason,
+      visitor.contact_num,
+      visitor.visit_purpose,
+      visitor.department,
+      visitor.vehicle,
+      visitor.time_in ? extractTimeFromDate(visitor.time_in) : '',
+      visitor.time_out ? extractTimeFromDate(visitor.time_out) : '',
+      visitor.date,
     ]);
 
 
     doc.autoTable({
-      head: [['Name', 'Reason',]],
+      head: [['Name', 'Contact No.', 'Purpose of Visit', 'Department', 'Vehicle', 'Time In', 'Time Out', 'Date']],
       body: tableData,
       startY: 30,
     });
 
-    doc.save('blocklist.pdf');
+    doc.save('visitor_archives.pdf');
   };
   function formatDate(timestamp) {
     const date = new Date(timestamp);
@@ -125,7 +130,7 @@ const Blocklist = () => {
   return (
     <>
       <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 font-mono">
-        <BSidebar />
+        <Sidebar />
         <main className="flex-1 p-4 lg:p-8 ml-0 lg:ml-64 transition-all duration-300">
           <div className="w-full bg-white rounded-lg shadow-lg p-4 lg:p-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4">
@@ -199,4 +204,4 @@ const Blocklist = () => {
   );
 };
 
-export default Blocklist;
+export default ABlocklist;
