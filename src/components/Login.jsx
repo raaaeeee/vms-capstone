@@ -14,25 +14,22 @@ const Login = () => {
     setIsLoading(true);
 
     const { data } = await supabase
-    .from('users')
-    .select('*')
-    .eq('email', email)
-    .single();
-
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .single();
 
     if (data && data.password === password && data.email === email) {
-    const role = data.role;
-    sessionStorage.setItem('role', role);
-    if (role === "ADMIN" || role === "GUARD") {
-      navigate("/dashboard");
-    } else if (role === "HEADSECURITY") {
-      navigate("/security");
+      const role = data.role;
+      sessionStorage.setItem('role', role);
+      if (role === 'ADMIN' || role === 'GUARD') {
+        navigate('/dashboard');
+      } else if (role === 'HEADSECURITY') {
+        navigate('/security');
+      } else {
+        navigate('/notifications');
+      }
     } else {
-      navigate("/notifications");
-    }
-   
-    }
-    else {
       openModal();
     }
 
@@ -55,8 +52,16 @@ const Login = () => {
 
   return (
     <>
-      <div className="flex items-center justify-center min-h-screen bg-green-900 font-mono">
-        <div className="w-full max-w-md p-10 bg-white rounded-lg">
+      <div
+        className="flex items-center justify-center min-h-screen font-mono"
+        style={{
+          backgroundImage: "url('images/csu-bg.jpg')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="absolute inset-0 bg-black bg-opacity-60"></div>
+        <div className="w-full max-w-md p-8 bg-white rounded-lg relative z-10 backdrop-blur-sm bg-white/40 border border-white/40">
           <div className="flex justify-center content-center">
             <img
               src="./images/csu.png"
@@ -64,11 +69,11 @@ const Login = () => {
               className="w-3/4 sm:w-2/3 md:w-1/2 lg:w-1/2 xl:w-1/3 2xl:w-1/4 object-contain"
             />
           </div>
-          <h1 className="text-2xl font-bold text-center text-green-900">
+          <h1 className="text-2xl font-bold text-center text-white">
             CSU Visitor Management System
           </h1>
           <form className="mt-6" onSubmit={userLogin}>
-            <div className="mb-4">
+            <div className="mb-3">
               <label className="input input-bordered flex items-center gap-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -90,7 +95,7 @@ const Login = () => {
               </label>
             </div>
 
-            <div className="mb-6">
+            <div className="mb-4">
               <label className="input input-bordered flex items-center gap-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +121,7 @@ const Login = () => {
             </div>
 
             <div className="flex items-center justify-between mb-4">
-              <label className="flex items-center text-sm">
+              <label className="flex items-center text-sm text-white">
                 <input
                   type="checkbox"
                   onChange={() => setShowPassword(!showPassword)}

@@ -14,27 +14,28 @@ const Events = () => {
   const [end_time, setEndTime] = useState('');
   const [event_location, setEventLocation] = useState('');
 
-  const mappedEvents = event.map(event => ({
-    id: event.id, 
+  const mappedEvents = event.map((event) => ({
+    id: event.id,
     title: event.event_name,
-    start: new Date(event.start), 
-    end: new Date(event.end),    
+    start: new Date(event.start),
+    end: new Date(event.end),
   }));
 
-  
-const add_event = async () => {
-  console.log("start" + start_time);
+  const add_event = async () => {
+    console.log('start' + start_time);
 
-  // Combine date and time
-  const start_datetime = moment.tz(`${event_date}T${start_time}`, "YYYY-MM-DDTHH:mm", "Asia/Manila").format('YYYY-MM-DD HH:mm:ss');
-  const end_datetime = moment.tz(`${event_date}T${end_time}`, "YYYY-MM-DDTHH:mm", "Asia/Manila").format('YYYY-MM-DD HH:mm:ss');
+    // Combine date and time
+    const start_datetime = moment
+      .tz(`${event_date}T${start_time}`, 'YYYY-MM-DDTHH:mm', 'Asia/Manila')
+      .format('YYYY-MM-DD HH:mm:ss');
+    const end_datetime = moment
+      .tz(`${event_date}T${end_time}`, 'YYYY-MM-DDTHH:mm', 'Asia/Manila')
+      .format('YYYY-MM-DD HH:mm:ss');
 
-  console.log('Formatted start time:', start_datetime);
-  console.log('Formatted end time:', end_datetime);
+    console.log('Formatted start time:', start_datetime);
+    console.log('Formatted end time:', end_datetime);
 
-  const { data, error } = await supabase
-    .from('events')
-    .insert([
+    const { data, error } = await supabase.from('events').insert([
       {
         event_name,
         start: start_datetime,
@@ -44,24 +45,22 @@ const add_event = async () => {
       },
     ]);
 
-  console.log(data);
-  if (error) {
-    console.error('Error inserting data:', error);
-    alert('Error inserting data');
-  } else {
-    openModal();
-  }
-};
+    console.log(data);
+    if (error) {
+      console.error('Error inserting data:', error);
+      alert('Error inserting data');
+    } else {
+      openModal();
+    }
+  };
 
   const fetch_events = async () => {
     try {
-      const { error, data } = await supabase
-        .from('events')
-        .select('*');
+      const { error, data } = await supabase.from('events').select('*');
       setEvents(data);
       console.log(data);
     } catch (error) {
-      alert("An unexpected error occurred.");
+      alert('An unexpected error occurred.');
       console.error('Error during registration:', error.message);
     }
   };
@@ -96,8 +95,8 @@ const add_event = async () => {
     <>
       <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 font-mono">
         <Sidebar />
-        <main className="flex-1 p-4 lg:p-8 ml-0 lg:ml-64 transition-all duration-300">
-          <div className="flex flex-col lg:flex-row justify-between gap-8 lg:py-24">
+        <main className="flex-1 lg:p-3 ml-0 lg:ml-56 transition-all duration-300">
+          <div className="flex flex-col lg:flex-row justify-between gap-4">
             <div className="bg-white p-6 rounded-lg shadow-md w-full lg:w-1/3">
               <div className="flex items-center mb-10">
                 <span className="mr-2">
@@ -108,7 +107,10 @@ const add_event = async () => {
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
-                  <label className="input input-bordered flex items-center gap-2 text-gray-400" htmlFor="eventName">
+                  <label
+                    className="input input-bordered flex items-center gap-2 text-gray-400"
+                    htmlFor="eventName"
+                  >
                     Event Name:
                     <input
                       id="eventName"
@@ -121,7 +123,10 @@ const add_event = async () => {
                 </div>
 
                 <div className="mb-4">
-                  <label className="input input-bordered flex items-center gap-2 text-gray-400" htmlFor="eventDate">
+                  <label
+                    className="input input-bordered flex items-center gap-2 text-gray-400"
+                    htmlFor="eventDate"
+                  >
                     Event Date:
                     <input
                       id="eventDate"
@@ -134,7 +139,10 @@ const add_event = async () => {
                 </div>
 
                 <div className="mb-4">
-                  <label className="input input-bordered flex items-center gap-2 text-gray-400" htmlFor="startTime">
+                  <label
+                    className="input input-bordered flex items-center gap-2 text-gray-400"
+                    htmlFor="startTime"
+                  >
                     Start Time:
                     <input
                       id="startTime"
@@ -147,7 +155,10 @@ const add_event = async () => {
                 </div>
 
                 <div className="mb-4">
-                  <label className="input input-bordered flex items-center gap-2 text-gray-400" htmlFor="endTime">
+                  <label
+                    className="input input-bordered flex items-center gap-2 text-gray-400"
+                    htmlFor="endTime"
+                  >
                     End Time:
                     <input
                       id="endTime"
@@ -160,7 +171,10 @@ const add_event = async () => {
                 </div>
 
                 <div className="mb-4">
-                  <label className="input input-bordered flex items-center gap-2 text-gray-400" htmlFor="location">
+                  <label
+                    className="input input-bordered flex items-center gap-2 text-gray-400"
+                    htmlFor="location"
+                  >
                     Location:
                     <input
                       id="location"
@@ -181,7 +195,7 @@ const add_event = async () => {
               </form>
             </div>
 
-            <div className="w-full lg:w-2/3 bg-white rounded-lg shadow-lg p-4">
+            <div className="w-full bg-white rounded-lg shadow-lg p-4">
               <Calendar
                 localizer={localizer}
                 events={mappedEvents}

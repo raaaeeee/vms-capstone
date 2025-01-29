@@ -13,8 +13,8 @@ const BVisitorLog = () => {
   const fetch_visitors = async () => {
     const today = new Date();
     const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, '0'); 
-    const dd = String(today.getDate()).padStart(2, '0'); 
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
     const formattedDate = `${yyyy}-${mm}-${dd}`;
 
     try {
@@ -31,18 +31,23 @@ const BVisitorLog = () => {
       const { error, data } = await query;
       if (error) throw error;
 
-      const sortedData = data.sort((a, b) => new Date(b.time_in) - new Date(a.time_in));
+      const sortedData = data.sort(
+        (a, b) => new Date(b.time_in) - new Date(a.time_in)
+      );
       setVisitorData(sortedData);
-
     } catch (error) {
-      alert("An unexpected error occurred.");
+      alert('An unexpected error occurred.');
       console.error('Error during data fetch:', error.message);
     }
   };
 
   function extractTimeFromDate(timestamp) {
     const date = new Date(timestamp);
-    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    });
   }
 
   useEffect(() => {
@@ -59,11 +64,10 @@ const BVisitorLog = () => {
     setSelectedImageLink('');
   };
 
-
   return (
     <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 font-mono">
       <BSidebar />
-      <main className="flex-1 p-4 lg:p-8 ml-0 lg:ml-64 transition-all duration-300">
+      <main className="flex-1 lg:p-3 ml-0 lg:ml-56 transition-all duration-300">
         <div className="w-full bg-white rounded-lg shadow-lg p-4 lg:p-6">
           <div className="flex items-center mb-4">
             <span className="mr-2">
@@ -80,183 +84,437 @@ const BVisitorLog = () => {
               <option>Family</option>
               <option>Organization</option>
               <option>VIP</option>
+              <option>Attendee</option>
+              <option>Guest</option>
               <option>Others</option>
             </select>
           </div>
+
           {visitorType === 'Type of Visitor' && (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left p-2">Name</th>
-                  <th className="text-left p-2">Contact No.</th>
-                  <th className="text-left p-2">Purpose of Visit</th>
-                  <th className="text-left p-2">Type of Visitor</th>
-                  <th className="text-left p-2">Vehicle</th>
-                  <th className="text-left p-2">Plate Number</th>
-                  <th className="text-left p-2 border-b-4 border-green-400">Time In</th>
-                  <th className="text-left p-2 border-b-4 border-red-400">Time Out</th>
-                </tr>
-              </thead>
-              <tbody>
-                {visitorsData.map((visitor, index) => (
-                  <tr key={index} className="border-b">
-                    <td className="p-2">{visitor.name}</td>
-                    <td className="p-2">{visitor.contact_num}</td>
-                    <td className="p-2">{visitor.visit_purpose}</td>
-                    <td className="p-2">{visitor.type_of_visitor}</td>
-                    <td className="p-2">{visitor.vehicle}</td>
-                    <td className="p-2">{visitor.plate_num}</td>
-                    <td className="p-2">{visitor.time_in ? extractTimeFromDate(visitor.time_in) : ''}</td>
-                    <td className="p-2">{visitor.time_out ? extractTimeFromDate(visitor.time_out) : ''}</td>
+            <div className="overflow-x-auto">
+              <table className="w-full table">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left p-2">Name</th>
+                    <th className="text-left p-2">Contact No.</th>
+                    <th className="text-left p-2">Purpose of Visit</th>
+                    <th className="text-left p-2">Type of Visitor</th>
+                    <th className="text-left p-2">Vehicle</th>
+                    <th className="text-left p-2">Plate Number</th>
+                    <th className="text-left p-2 border-b-4 border-green-400">
+                      Time In
+                    </th>
+                    <th className="text-left p-2 border-b-4 border-red-400">
+                      Time Out
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-          {visitorType === 'Family' && (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left p-2">Name</th>
-                  <th className="text-left p-2">Contact No.</th>
-                  <th className="text-left p-1">Purpose of Visit</th>
-                  <th className="text-left p-2">Vehicle</th>
-                  <th className="text-left p-2">Plate Number</th>
-                  <th className="text-left p-2 border-b-4 border-green-400">Time In</th>
-                  <th className="text-left p-2 border-b-4 border-red-400">Time Out</th>
-                  <th className="text-left p-2">List of Names</th>
-                </tr>
-              </thead>
-              <tbody>
-                {visitorsData.map((visitor, index) => (
-                  <tr key={index} className="border-b">
-                    <td className="p-2">{visitor.name}</td>
-                    <td className="p-2">{visitor.contact_num}</td>
-                    <td className="p-1">{visitor.visit_purpose}</td>
-                    <td className="p-2">{visitor.vehicle}</td>
-                    <td className="p-2">{visitor.plate_num}</td>
-                    <td className="p-2">{visitor.time_in ? extractTimeFromDate(visitor.time_in) : ''}</td>
-                    <td className="p-2">{visitor.time_out ? extractTimeFromDate(visitor.time_out) : ''}</td>
-                    <td className='p-2'><button className='border border-green-500 text-green-500 font-semibold py-2 px-4 rounded hover:bg-green-500 hover:text-white'
-                     onClick={() => openModal(visitor.image_link)}>VIEW</button></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          )}
-    {visitorType === 'Organization' && (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left p-2">Organization Name</th>
-                  <th className="text-left p-2">Contact No.</th>
-                  <th className="text-left p-1">Purpose of Visit</th>
-                  <th className="text-left p-2">Vehicle</th>
-                  <th className="text-left p-2">Plate Number</th>
-                  <th className="text-left p-2 border-b-4 border-green-400">Time In</th>
-                  <th className="text-left p-2 border-b-4 border-red-400">Time Out</th>
-                  <th className="text-left p-2">List of Names</th>
-                </tr>
-              </thead>
-              <tbody>
-                {visitorsData.map((visitor, index) => (
-                  <tr key={index} className="border-b">
-                    <td className="p-2">{visitor.name}</td>
-                    <td className="p-2">{visitor.contact_num}</td>
-                    <td className="p-1">{visitor.visit_purpose}</td>
-                    <td className="p-2">{visitor.vehicle}</td>
-                    <td className="p-2">{visitor.plate_num}</td>
-                    <td className="p-2">{visitor.time_in ? extractTimeFromDate(visitor.time_in) : ''}</td>
-                    <td className="p-2">{visitor.time_out ? extractTimeFromDate(visitor.time_out) : ''}</td>
-                    <td className='p-2'><button className='border border-green-500 text-green-500 font-semibold py-2 px-4 rounded hover:bg-green-500 hover:text-white'
-                     onClick={() => openModal(visitor.image_link)}>VIEW</button></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          )}
-      {visitorType === 'VIP' && (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left p-2">Representative Name</th>
-                  <th className="text-left p-2">VIP Name</th>
-                  <th className="text-left p-2">Contact No.</th>
-                  <th className="text-left p-1">Purpose of Visit</th>
-                  <th className="text-left p-2">Vehicle</th>
-                  <th className="text-left p-2">Plate Number</th>
-                  <th className="text-left p-2 border-b-4 border-green-400">Time In</th>
-                  <th className="text-left p-2 border-b-4 border-red-400">Time Out</th>
-                  <th className="text-left p-2">List of Names</th>
-                </tr>
-              </thead>
-              <tbody>
-                {visitorsData.map((visitor, index) => (
-                  <tr key={index} className="border-b">
-                    <td className="p-2">{visitor.name}</td>
-                    <td className="p-2">{visitor.vipname}</td>
-                    <td className="p-2">{visitor.contact_num}</td>
-                    <td className="p-1">{visitor.visit_purpose}</td>
-                    <td className="p-2">{visitor.vehicle}</td>
-                    <td className="p-2">{visitor.plate_num}</td>
-                    <td className="p-2">{visitor.time_in ? extractTimeFromDate(visitor.time_in) : ''}</td>
-                    <td className="p-2">{visitor.time_out ? extractTimeFromDate(visitor.time_out) : ''}</td>
-                    <td className='p-2'><button className='border border-green-500 text-green-500 font-semibold py-2 px-4 rounded hover:bg-green-500 hover:text-white'
-                    onClick={() => openModal(visitor.image_link)}>VIEW</button></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          )}
-          {visitorType === 'Others' && (
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left p-2">Name</th>
-                  <th className="text-left p-2">Contact No.</th>
-                  <th className="text-left p-2">Purpose of Visit</th>
-                  <th className="text-left p-2">Type of Visitor</th>
-                  <th className="text-left p-2">Vehicle</th>
-                  <th className="text-left p-2">Plate Number</th>
-                  <th className="text-left p-2 border-b-4 border-green-400">Time In</th>
-                  <th className="text-left p-2 border-b-4 border-red-400">Time Out</th>
-                </tr>
-              </thead>
-              <tbody>
-                {visitorsData.map((visitor, index) => (
-                  <tr key={index} className="border-b">
-                    <td className="p-2">{visitor.name}</td>
-                    <td className="p-2">{visitor.contact_num}</td>
-                    <td className="p-2">{visitor.visit_purpose}</td>
-                    <td className="p-2">{visitor.type_of_visitor}</td>
-                    <td className="p-2">{visitor.vehicle}</td>
-                    <td className="p-2">{visitor.plate_num}</td>
-                    <td className="p-2">{visitor.time_in ? extractTimeFromDate(visitor.time_in) : ''}</td>
-                    <td className="p-2">{visitor.time_out ? extractTimeFromDate(visitor.time_out) : ''}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-           {isModalOpen && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-              <div className="bg-white p-6 rounded shadow-lg w-96 h-auto max-w-xl max-h-[85vh] overflow-auto">
-                <img src={selectedImageLink} alt="Visitor" className="max-w-full max-h-[80vh] object-contain" />
-                <button onClick={closeModal} className="mt-4 px-4 py-2 bg-red-500 text-white rounded">Close</button>
-              </div>
+                </thead>
+                <tbody>
+                  {visitorsData.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan="8"
+                        className="text-center p-3 text-gray-400 font-bold italic"
+                      >
+                        No Visitors today
+                      </td>
+                    </tr>
+                  )}
+                  {visitorsData.map((visitor, index) => (
+                    <tr key={index} className="border-b">
+                      <td className="p-2">{visitor.name}</td>
+                      <td className="p-2">{visitor.contact_num}</td>
+                      <td className="p-2">{visitor.visit_purpose}</td>
+                      <td className="p-2">{visitor.type_of_visitor}</td>
+                      <td className="p-2">{visitor.vehicle}</td>
+                      <td className="p-2">{visitor.plate_num}</td>
+                      <td className="p-2">
+                        {visitor.time_in
+                          ? extractTimeFromDate(visitor.time_in)
+                          : ''}
+                      </td>
+                      <td className="p-2">
+                        {visitor.time_out
+                          ? extractTimeFromDate(visitor.time_out)
+                          : ''}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
 
+          {visitorType === 'Family' && (
+            <div className="overflow-x-auto">
+              <table className="w-full table">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left p-2">Name</th>
+                    <th className="text-left p-2">Contact No.</th>
+                    <th className="text-left p-1">Purpose of Visit</th>
+                    <th className="text-left p-2">Vehicle</th>
+                    <th className="text-left p-2">Plate Number</th>
+                    <th className="text-left p-2 border-b-4 border-green-400">
+                      Time In
+                    </th>
+                    <th className="text-left p-2 border-b-4 border-red-400">
+                      Time Out
+                    </th>
+                    <th className="text-left p-2">List of Names</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {visitorsData.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan="8"
+                        className="text-center p-3 text-gray-400 font-bold italic"
+                      >
+                        No Visitors today
+                      </td>
+                    </tr>
+                  )}
+                  {visitorsData.map((visitor, index) => (
+                    <tr key={index} className="border-b">
+                      <td className="p-2">{visitor.name}</td>
+                      <td className="p-2">{visitor.contact_num}</td>
+                      <td className="p-1">{visitor.visit_purpose}</td>
+                      <td className="p-2">{visitor.vehicle}</td>
+                      <td className="p-2">{visitor.plate_num}</td>
+                      <td className="p-2">
+                        {visitor.time_in
+                          ? extractTimeFromDate(visitor.time_in)
+                          : ''}
+                      </td>
+                      <td className="p-2">
+                        {visitor.time_out
+                          ? extractTimeFromDate(visitor.time_out)
+                          : ''}
+                      </td>
+                      <td className="p-2">
+                        <button
+                          className="border border-green-500 text-green-500 font-semibold py-2 px-4 rounded hover:bg-green-500 hover:text-white"
+                          onClick={() => openModal(visitor.image_link)}
+                        >
+                          VIEW
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {visitorType === 'Organization' && (
+            <div className="overflow-x-auto">
+              <table className="w-full table">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left p-2">Organization Name</th>
+                    <th className="text-left p-2">Contact No.</th>
+                    <th className="text-left p-1">Purpose of Visit</th>
+                    <th className="text-left p-2">Vehicle</th>
+                    <th className="text-left p-2">Plate Number</th>
+                    <th className="text-left p-2 border-b-4 border-green-400">
+                      Time In
+                    </th>
+                    <th className="text-left p-2 border-b-4 border-red-400">
+                      Time Out
+                    </th>
+                    <th className="text-left p-2">List of Names</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {visitorsData.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan="8"
+                        className="text-center p-3 text-gray-400 font-bold italic"
+                      >
+                        No Visitors today
+                      </td>
+                    </tr>
+                  )}
+                  {visitorsData.map((visitor, index) => (
+                    <tr key={index} className="border-b">
+                      <td className="p-2">{visitor.name}</td>
+                      <td className="p-2">{visitor.contact_num}</td>
+                      <td className="p-1">{visitor.visit_purpose}</td>
+                      <td className="p-2">{visitor.vehicle}</td>
+                      <td className="p-2">{visitor.plate_num}</td>
+                      <td className="p-2">
+                        {visitor.time_in
+                          ? extractTimeFromDate(visitor.time_in)
+                          : ''}
+                      </td>
+                      <td className="p-2">
+                        {visitor.time_out
+                          ? extractTimeFromDate(visitor.time_out)
+                          : ''}
+                      </td>
+                      <td className="p-2">
+                        <button
+                          className="border border-green-500 text-green-500 font-semibold py-2 px-4 rounded hover:bg-green-500 hover:text-white"
+                          onClick={() => openModal(visitor.image_link)}
+                        >
+                          VIEW
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {visitorType === 'VIP' && (
+            <div className="overflow-x-auto">
+              <table className="w-full table">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left p-2">Representative Name</th>
+                    <th className="text-left p-2">VIP Name</th>
+                    <th className="text-left p-2">Contact No.</th>
+                    <th className="text-left p-1">Purpose of Visit</th>
+                    <th className="text-left p-2">Vehicle</th>
+                    <th className="text-left p-2">Plate Number</th>
+                    <th className="text-left p-2 border-b-4 border-green-400">
+                      Time In
+                    </th>
+                    <th className="text-left p-2 border-b-4 border-red-400">
+                      Time Out
+                    </th>
+                    <th className="text-left p-2">List of Names</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {visitorsData.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan="8"
+                        className="text-center p-3 text-gray-400 font-bold italic"
+                      >
+                        No Visitors today
+                      </td>
+                    </tr>
+                  )}
+                  {visitorsData.map((visitor, index) => (
+                    <tr key={index} className="border-b">
+                      <td className="p-2">{visitor.name}</td>
+                      <td className="p-2">{visitor.vipname}</td>
+                      <td className="p-2">{visitor.contact_num}</td>
+                      <td className="p-1">{visitor.visit_purpose}</td>
+                      <td className="p-2">{visitor.vehicle}</td>
+                      <td className="p-2">{visitor.plate_num}</td>
+                      <td className="p-2">
+                        {visitor.time_in
+                          ? extractTimeFromDate(visitor.time_in)
+                          : ''}
+                      </td>
+                      <td className="p-2">
+                        {visitor.time_out
+                          ? extractTimeFromDate(visitor.time_out)
+                          : ''}
+                      </td>
+                      <td className="p-2">
+                        <button
+                          className="border border-green-500 text-green-500 font-semibold py-2 px-4 rounded hover:bg-green-500 hover:text-white"
+                          onClick={() => openModal(visitor.image_link)}
+                        >
+                          VIEW
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {visitorType === 'Attendee' && (
+            <div className="overflow-x-auto">
+              <table className="w-full table">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left p-2">Name</th>
+                    <th className="text-left p-2">Contact No.</th>
+                    <th className="text-left p-2">Purpose of Visit</th>
+                    <th className="text-left p-2">Type of Visitor</th>
+                    <th className="text-left p-2">Vehicle</th>
+                    <th className="text-left p-2">Plate Number</th>
+                    <th className="text-left p-2 border-b-4 border-green-400">
+                      Time In
+                    </th>
+                    <th className="text-left p-2 border-b-4 border-red-400">
+                      Time Out
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {visitorsData.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan="8"
+                        className="text-center p-3 text-gray-400 font-bold italic"
+                      >
+                        No Visitors today
+                      </td>
+                    </tr>
+                  )}
+                  {visitorsData.map((visitor, index) => (
+                    <tr key={index} className="border-b">
+                      <td className="p-2">{visitor.name}</td>
+                      <td className="p-2">{visitor.contact_num}</td>
+                      <td className="p-2">{visitor.visit_purpose}</td>
+                      <td className="p-2">{visitor.type_of_visitor}</td>
+                      <td className="p-2">{visitor.vehicle}</td>
+                      <td className="p-2">{visitor.plate_num}</td>
+                      <td className="p-2">
+                        {visitor.time_in
+                          ? extractTimeFromDate(visitor.time_in)
+                          : ''}
+                      </td>
+                      <td className="p-2">
+                        {visitor.time_out
+                          ? extractTimeFromDate(visitor.time_out)
+                          : ''}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {visitorType === 'Guest' && (
+            <div className="overflow-x-auto">
+              <table className="w-full table">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left p-2">Name</th>
+                    <th className="text-left p-2">Contact No.</th>
+                    <th className="text-left p-2">Purpose of Visit</th>
+                    <th className="text-left p-2">Type of Visitor</th>
+                    <th className="text-left p-2">Vehicle</th>
+                    <th className="text-left p-2">Plate Number</th>
+                    <th className="text-left p-2 border-b-4 border-green-400">
+                      Time In
+                    </th>
+                    <th className="text-left p-2 border-b-4 border-red-400">
+                      Time Out
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {visitorsData.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan="8"
+                        className="text-center p-3 text-gray-400 font-bold italic"
+                      >
+                        No Visitors today
+                      </td>
+                    </tr>
+                  )}
+                  {visitorsData.map((visitor, index) => (
+                    <tr key={index} className="border-b">
+                      <td className="p-2">{visitor.name}</td>
+                      <td className="p-2">{visitor.contact_num}</td>
+                      <td className="p-2">{visitor.visit_purpose}</td>
+                      <td className="p-2">{visitor.type_of_visitor}</td>
+                      <td className="p-2">{visitor.vehicle}</td>
+                      <td className="p-2">{visitor.plate_num}</td>
+                      <td className="p-2">
+                        {visitor.time_in
+                          ? extractTimeFromDate(visitor.time_in)
+                          : ''}
+                      </td>
+                      <td className="p-2">
+                        {visitor.time_out
+                          ? extractTimeFromDate(visitor.time_out)
+                          : ''}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {visitorType === 'Others' && (
+            <div className="overflow-x-auto">
+              <table className="w-full table">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left p-2">Name</th>
+                    <th className="text-left p-2">Contact No.</th>
+                    <th className="text-left p-2">Purpose of Visit</th>
+                    <th className="text-left p-2">Type of Visitor</th>
+                    <th className="text-left p-2">Vehicle</th>
+                    <th className="text-left p-2">Plate Number</th>
+                    <th className="text-left p-2 border-b-4 border-green-400">
+                      Time In
+                    </th>
+                    <th className="text-left p-2 border-b-4 border-red-400">
+                      Time Out
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {visitorsData.length === 0 && (
+                    <tr>
+                      <td
+                        colSpan="8"
+                        className="text-center p-3 text-gray-400 font-bold italic"
+                      >
+                        No Visitors today
+                      </td>
+                    </tr>
+                  )}
+                  {visitorsData.map((visitor, index) => (
+                    <tr key={index} className="border-b">
+                      <td className="p-2">{visitor.name}</td>
+                      <td className="p-2">{visitor.contact_num}</td>
+                      <td className="p-2">{visitor.visit_purpose}</td>
+                      <td className="p-2">{visitor.type_of_visitor}</td>
+                      <td className="p-2">{visitor.vehicle}</td>
+                      <td className="p-2">{visitor.plate_num}</td>
+                      <td className="p-2">
+                        {visitor.time_in
+                          ? extractTimeFromDate(visitor.time_in)
+                          : ''}
+                      </td>
+                      <td className="p-2">
+                        {visitor.time_out
+                          ? extractTimeFromDate(visitor.time_out)
+                          : ''}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {isModalOpen && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+              <div className="bg-white p-6 rounded shadow-lg w-96 h-auto max-w-xl max-h-[85vh] overflow-auto">
+                <img
+                  src={selectedImageLink}
+                  alt="Visitor"
+                  className="max-w-full max-h-[80vh] object-contain"
+                />
+                <button
+                  onClick={closeModal}
+                  className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>

@@ -1,7 +1,6 @@
 import Sidebar from './Sidebar.jsx';
 import { RiArchiveStackFill } from 'react-icons/ri';
 import { FaFilePdf } from 'react-icons/fa';
-import { MdEventAvailable } from 'react-icons/md';
 import supabase from '../supabaseClient.jsx';
 import { useState, useEffect } from 'react';
 import { jsPDF } from 'jspdf';
@@ -16,23 +15,33 @@ const Archives = () => {
   const [selectedYear, setSelectedYear] = useState('');
 
   const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
   ];
 
   const fetch_visitors = async () => {
     try {
-      const { error, data } = await supabase.from('visitors').select('*');
+      const { error, data } = await supabase
+        .from('visitors')
+        .select('*')
+        .order('date', { ascending: false })
+        .order('time_in', { ascending: false });
 
       if (error) throw error;
 
-      const sortedData = data.sort((a, b) => {
-        return new Date(b.time_in) - new Date(a.time_in);
-      });
-
-      setVisitorData(sortedData);
-      setTotalVisitors(sortedData.length);
-      setFilteredData(sortedData);
+      setVisitorData(data);
+      setTotalVisitors(data.length);
+      setFilteredData(data);
     } catch (error) {
       alert('An unexpected error occurred.');
       console.error('Error during fetching visitors:', error.message);
@@ -45,7 +54,7 @@ const Archives = () => {
       return;
     }
 
-    const filtered = visitorsData.filter(visitor => {
+    const filtered = visitorsData.filter((visitor) => {
       const visitorDate = new Date(visitor.date);
       return (
         visitorDate.getMonth() + 1 === parseInt(selectedMonth) &&
@@ -64,17 +73,13 @@ const Archives = () => {
     filterByMonthAndYear();
   }, [selectedMonth, selectedYear, visitorsData]);
 
-  const handleSearchChange = (event) => {
-    setSearch(event.target.value);
-  };
-
   const exportToPDF = () => {
     const doc = new jsPDF();
 
     doc.setFontSize(12);
     doc.text('Visitor Archives', 14, 16);
 
-    const tableData = filteredData.map(visitor => [
+    const tableData = filteredData.map((visitor) => [
       visitor.name,
       visitor.contact_num,
       visitor.visit_purpose,
@@ -86,7 +91,18 @@ const Archives = () => {
     ]);
 
     doc.autoTable({
-      head: [['Name', 'Contact No.', 'Purpose of Visit', 'Department', 'Vehicle', 'Time In', 'Time Out', 'Date']],
+      head: [
+        [
+          'Name',
+          'Contact No.',
+          'Purpose of Visit',
+          'Department',
+          'Vehicle',
+          'Time In',
+          'Time Out',
+          'Date',
+        ],
+      ],
       body: tableData,
       startY: 30,
     });
@@ -94,10 +110,37 @@ const Archives = () => {
     doc.save('visitor_archives.pdf');
   };
 
+  useEffect(() => {
+    if (!search) {
+      setFilteredData(visitorsData);
+    } else {
+      const lowerCaseSearch = search.toLowerCase();
+      const filtered = visitorsData.filter((visitor) => {
+        return (
+          (visitor.name &&
+            visitor.name.toLowerCase().includes(lowerCaseSearch)) ||
+          (visitor.contact_num &&
+            visitor.contact_num.toLowerCase().includes(lowerCaseSearch)) ||
+          (visitor.visit_purpose &&
+            visitor.visit_purpose.toLowerCase().includes(lowerCaseSearch)) ||
+          (visitor.department &&
+            visitor.department.toLowerCase().includes(lowerCaseSearch)) ||
+          (visitor.vehicle &&
+            visitor.vehicle.toLowerCase().includes(lowerCaseSearch))
+        );
+      });
+      setFilteredData(filtered);
+    }
+  }, [search, visitorsData]);
+
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value);
+  };
+
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 font-mono">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-200 font-mono">
       <Sidebar />
-      <main className="flex-1 p-4 lg:p-8 ml-0 lg:ml-64 transition-all duration-300">
+      <main className="flex-1 lg:p-3 ml-0 lg:ml-56 transition-all duration-300">
         <div className="w-full bg-white rounded-lg shadow-lg p-4 lg:p-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4">
             <div className="flex items-center mb-4 sm:mb-0">
@@ -110,8 +153,18 @@ const Archives = () => {
             </div>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 w-full sm:w-auto">
               <label className="input input-bordered flex items-center gap-2 w-full sm:w-auto">
-                <input type="text" className="grow" placeholder="Search" onChange={handleSearchChange} />
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="h-4 w-4 opacity-70">
+                <input
+                  type="text"
+                  className="grow"
+                  placeholder="Search..."
+                  onChange={handleSearchChange}
+                />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 16 16"
+                  fill="currentColor"
+                  className="h-4 w-4 opacity-70"
+                >
                   <path
                     fillRule="evenodd"
                     d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
@@ -163,7 +216,7 @@ const Archives = () => {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-sm sm:text-base">
+            <table className="w-full text-sm sm:text-base table">
               <thead>
                 <tr className="border-b">
                   <th className="text-left p-2">Name</th>
