@@ -93,7 +93,7 @@ const BEvents = () => {
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 font-mono">
+      <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 font-sans">
         <BSidebar />
         <main className="flex-1 lg:p-4 ml-0 lg:ml-56 transition-all duration-300">
           <div className="flex flex-col lg:flex-row justify-between gap-4">
@@ -102,7 +102,7 @@ const BEvents = () => {
                 <span className="mr-2">
                   <MdEventAvailable size={30} />
                 </span>
-                <h2 className="text-lg lg:text-xl font-bold">Create Event</h2>
+                <h2 className="text-lg lg:text-xl text-gray-700 font-bold">Create Event</h2>
               </div>
 
               <form onSubmit={handleSubmit}>

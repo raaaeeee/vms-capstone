@@ -9,7 +9,7 @@ const LandingPage = () => {
 
   return (
     <div
-      className="hero min-h-screen font-mono"
+      className="hero min-h-screen font-sans"
       style={{
         backgroundImage: 'url(./images/csu-bg.jpg)',
       }}

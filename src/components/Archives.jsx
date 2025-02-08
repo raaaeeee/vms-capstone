@@ -74,10 +74,14 @@ const Archives = () => {
   }, [selectedMonth, selectedYear, visitorsData]);
 
   const exportToPDF = () => {
-    const doc = new jsPDF();
+    const doc = new jsPDF({
+      orientation: 'landscape', // Set the orientation to landscape for more width
+      unit: 'mm',
+      format: 'a4',
+    });
 
-    doc.setFontSize(12);
-    doc.text('Visitor Archives', 14, 16);
+    doc.setFontSize(10);
+    doc.text('Visitor Archives', 14, 15);
 
     const tableData = filteredData.map((visitor) => [
       visitor.name,
@@ -85,8 +89,8 @@ const Archives = () => {
       visitor.visit_purpose,
       visitor.department,
       visitor.vehicle,
-      visitor.time_in,
-      visitor.time_out,
+      visitor.time_in ? new Date(visitor.time_in).toLocaleTimeString() : '',
+      visitor.time_out ? new Date(visitor.time_out).toLocaleTimeString() : '',
       visitor.date,
     ]);
 
@@ -105,6 +109,20 @@ const Archives = () => {
       ],
       body: tableData,
       startY: 30,
+      styles: { fontSize: 8, cellPadding: 2 }, // Reduce font size and padding
+      columnStyles: {
+        0: { cellWidth: 'auto' }, // Name
+        1: { cellWidth: 'auto' }, // Contact No.
+        2: { cellWidth: 'auto' }, // Purpose of Visit
+        3: { cellWidth: 'auto' }, // Department
+        4: { cellWidth: 'auto' }, // Vehicle
+        5: { cellWidth: 'auto' }, // Time In
+        6: { cellWidth: 'auto' }, // Time Out
+        7: { cellWidth: 'auto' }, // Date
+      },
+      theme: 'grid', // Grid for better readability
+      styles: { overflow: 'linebreak' }, // Ensures text wraps properly
+      margin: { top: 20, left: 10, right: 10 },
     });
 
     doc.save('visitor_archives.pdf');
@@ -138,7 +156,7 @@ const Archives = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-200 font-mono">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-200 font-sans">
       <Sidebar />
       <main className="flex-1 lg:p-3 ml-0 lg:ml-56 transition-all duration-300">
         <div className="w-full bg-white rounded-lg shadow-lg p-4 lg:p-6">
@@ -147,7 +165,7 @@ const Archives = () => {
               <span className="mr-2">
                 <RiArchiveStackFill size={30} />
               </span>
-              <h2 className="text-lg lg:text-xl font-bolder">
+              <h2 className="text-lg lg:text-xl font-bolder text-gray-700">
                 Archives & Report Information
               </h2>
             </div>
@@ -218,7 +236,7 @@ const Archives = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-sm sm:text-base table">
               <thead>
-                <tr className="border-b">
+                <tr className="border-b text-gray-700">
                   <th className="text-left p-2">Name</th>
                   <th className="text-left p-2">Contact No.</th>
                   <th className="text-left p-2">Purpose of Visit</th>
@@ -237,7 +255,7 @@ const Archives = () => {
               </thead>
               <tbody>
                 {filteredData.map((visitor, index) => (
-                  <tr key={index} className="border-b">
+                  <tr key={index} className="border-b text-gray-700">
                     <td className="p-1">{visitor.name}</td>
                     <td className="p-1">{visitor.contact_num}</td>
                     <td className="p-1">{visitor.visit_purpose}</td>
@@ -246,10 +264,14 @@ const Archives = () => {
                     <td className="p-1">{visitor.plate_num}</td>
                     <td className="p-1">{visitor.type_of_visitor}</td>
                     <td className="p-1">
-                      {visitor.time_in === null ? '' : visitor.time_in}
+                      {visitor.time_in
+                        ? new Date(visitor.time_in).toLocaleTimeString()
+                        : ''}
                     </td>
                     <td className="p-1">
-                      {visitor.time_out === null ? '' : visitor.time_out}
+                      {visitor.time_out
+                        ? new Date(visitor.time_out).toLocaleTimeString()
+                        : ''}
                     </td>
                     <td className="p-1">{visitor.date}</td>
                   </tr>

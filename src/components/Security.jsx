@@ -146,7 +146,7 @@ const Security = () => {
 
   return (
     <div
-      className="flex flex-col items-center justify-center min-h-screen font-mono relative"
+      className="flex flex-col items-center justify-center min-h-screen font-sans relative"
       style={{
         backgroundImage: "url('images/csu-bg.jpg')",
         backgroundSize: 'cover',
@@ -190,7 +190,7 @@ const Security = () => {
                     title: 'Total Pending',
                     count: time_in,
                     icon: <MdAccessTime className="w-12 h-12 text-white" />,
-                    bgColor: 'bg-gradient-to-r from-yellow-400 to-yellow-600',
+                    bgColor: 'bg-gradient-to-r from-orange-600 to-yellow-400',
                   },
                   {
                     title: 'Total Blocked',
@@ -219,7 +219,7 @@ const Security = () => {
                       <tr className="border-b">
                         {['Name', 'Reason for blocking', 'Actions'].map(
                           (header, index) => (
-                            <th key={index} className="text-center p-2">
+                            <th key={index} className="text-center text-black p-2">
                               {header}
                             </th>
                           )
@@ -259,7 +259,7 @@ const Security = () => {
               <div className="overflow-x-auto max-h-60 overflow-y-auto">
                 <table className="w-full table table-auto">
                   <thead>
-                    <tr className="border-b">
+                    <tr className="border-b text-black">
                       <th>Name</th>
                       <th>Reason for blocking</th>
                       <th>Date Blocked</th>
@@ -267,7 +267,7 @@ const Security = () => {
                   </thead>
                   <tbody>
                     {blocklistData.map((blocked, index) => (
-                      <tr key={index} className="border-b">
+                      <tr key={index} className="border-b text-black">
                         <td>{blocked.name}</td>
                         <td>{blocked.reason}</td>
                         <td>
@@ -292,7 +292,7 @@ const Security = () => {
             >
               ✕
             </button>
-            <h3 className="font-bold text-2xl text-center text-gray-800">
+            <h3 className="font-bold text-2xl text-center text-white-800">
               Are you sure you want to log out?
             </h3>
             <p className="mt-2 text-gray-600 text-center">

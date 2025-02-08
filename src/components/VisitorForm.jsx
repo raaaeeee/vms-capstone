@@ -47,7 +47,7 @@ const VisitorForm = () => {
 
   return (
     <div
-      className="relative flex items-center justify-center min-h-screen bg-cover bg-center font-mono"
+      className="relative flex items-center justify-center min-h-screen bg-cover bg-center font-sans"
       style={{
         backgroundImage: "url('images/csu-bg.jpg')",
       }}

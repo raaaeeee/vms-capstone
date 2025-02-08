@@ -93,7 +93,7 @@ const Events = () => {
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 font-mono">
+      <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 font-sans">
         <Sidebar />
         <main className="flex-1 lg:p-3 ml-0 lg:ml-56 transition-all duration-300">
           <div className="flex flex-col lg:flex-row justify-between gap-4">

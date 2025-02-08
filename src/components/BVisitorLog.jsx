@@ -65,7 +65,7 @@ const BVisitorLog = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 font-mono">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 font-sans">
       <BSidebar />
       <main className="flex-1 lg:p-3 ml-0 lg:ml-56 transition-all duration-300">
         <div className="w-full bg-white rounded-lg shadow-lg p-4 lg:p-6">
@@ -73,7 +73,7 @@ const BVisitorLog = () => {
             <span className="mr-2">
               <IoIosPeople size={32} />
             </span>
-            <h2 className="text-lg lg:text-xl font-bolder">
+            <h2 className="text-lg lg:text-xl font-bolder text-gray-700">
               Visitor's Time In & Out
             </h2>
             <select
@@ -94,7 +94,7 @@ const BVisitorLog = () => {
             <div className="overflow-x-auto">
               <table className="w-full table">
                 <thead>
-                  <tr className="border-b">
+                  <tr className="border-b text-gray-700">
                     <th className="text-left p-2">Name</th>
                     <th className="text-left p-2">Contact No.</th>
                     <th className="text-left p-2">Purpose of Visit</th>
@@ -121,7 +121,7 @@ const BVisitorLog = () => {
                     </tr>
                   )}
                   {visitorsData.map((visitor, index) => (
-                    <tr key={index} className="border-b">
+                    <tr key={index} className="border-b text-gray-700">
                       <td className="p-2">{visitor.name}</td>
                       <td className="p-2">{visitor.contact_num}</td>
                       <td className="p-2">{visitor.visit_purpose}</td>

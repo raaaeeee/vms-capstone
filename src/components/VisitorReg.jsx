@@ -290,28 +290,29 @@ const VisitorReg = () => {
   };
 
   return (
-    <>
+    <>     
       <div className="flex items-center justify-center min-h-screen bg-green-900 font-mono px-4 sm:px-0">
-        <div className="w-full sm:w-3/4 lg:w-2/5 p-5 bg-white rounded-lg">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <h1 className="text-xl sm:text-2xl font-bold mb-6 text-cente flex-1">
-              Visitor Registration
-            </h1>
-            <select
-              className="select select-bordered "
-              onChange={(e) => setVisitorType(e.target.value)}
-            >
-              <option disabled selected>
-                Type of Visitor
-              </option>
-              <option>Family</option>
-              <option>Organization</option>
-              <option>VIP</option>
-              <option>Attendee</option>
-              <option>Guest</option>
-              <option>Others</option>
-            </select>
-          </div>
+      <div className="w-full sm:w-3/4 lg:w-2/5 p-5 bg-white rounded-lg">
+        <div className="flex flex-col sm:flex-row items-center gap-4">
+    <h1 className="text-2xl sm:text-3xl font-bold text-center flex-1">
+      Visitor Registration
+    </h1>
+    <select
+      className="select select-bordered w-full sm:w-48"
+      onChange={(e) => setVisitorType(e.target.value)}
+    >
+      <option disabled selected>
+        Type of Visitor
+      </option>
+      <option>Family</option>
+      <option>Organization</option>
+      <option>VIP</option>
+      <option>Attendee</option>
+      <option>Guest</option>
+      <option>Others</option>
+    </select>
+  </div>
+
           <form className="space-y-4" onSubmit={insertVisitorData}>
             {visitorType === 'Guest' && (
               <>

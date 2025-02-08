@@ -78,7 +78,11 @@ const ABlocklist = () => {
   };
 
   const exportToPDF = () => {
-    const doc = new jsPDF();
+    const doc = new jsPDF({
+      orientation: 'portrait', // Use portrait to match standard reports
+      unit: 'mm',
+      format: 'a4',
+    });
     doc.setFontSize(12);
     doc.text('Blocklist', 14, 16);
     const tableData = filteredData.map((visitor) => [
@@ -90,6 +94,15 @@ const ABlocklist = () => {
       head: [['Name', 'Reason for Blocking', 'Date Blocked']],
       body: tableData,
       startY: 30,
+      styles: { fontSize: 9, cellPadding: 3 }, // Adjust font and padding
+    columnStyles: {
+      0: { cellWidth: 60 }, // Name column width
+      1: { cellWidth: 80 }, // Reason column width
+      2: { cellWidth: 40 }, // Date Blocked column width
+    },
+    theme: 'grid', // Adds grid lines for better readability
+    styles: { overflow: 'linebreak' }, // Ensures text wraps properly
+    margin: { top: 20, left: 10, right: 10 },
     });
     doc.save('blocklist.pdf');
   };
@@ -104,7 +117,7 @@ const ABlocklist = () => {
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 font-mono">
+      <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 font-sans">
         <Sidebar />
         <main className="flex-1 lg:p-3 ml-0 lg:ml-56 transition-all duration-300">
           <div className="w-full bg-white rounded-lg shadow-lg p-4 lg:p-6">
@@ -113,7 +126,7 @@ const ABlocklist = () => {
                 <span className="mr-2">
                   <RiArchiveStackFill size={30} />
                 </span>
-                <h2 className="text-lg lg:text-xl font-bolder">Blocklist</h2>
+                <h2 className="text-lg lg:text-xl font-bolder text-gray-700">Blocklist</h2>
               </div>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 w-full sm:w-auto">
                 <label className="input input-bordered flex items-center gap-2 w-full sm:w-auto">
@@ -162,9 +175,9 @@ const ABlocklist = () => {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="table w-full text-sm sm:text-base">
+              <table className="table w-full text-sm sm:text-base ">
                 <thead>
-                  <tr>
+                  <tr className='text-gray-700'>
                     <th>Name</th>
                     <th>Reason for Blocking</th>
                     <th>Date Blocked</th>
@@ -172,7 +185,7 @@ const ABlocklist = () => {
                 </thead>
                 <tbody>
                   {filteredData.map((visitor, index) => (
-                    <tr key={index} className="border-b">
+                    <tr key={index} className="border-b text-gray-700">
                       <td>{visitor.name}</td>
                       <td>{visitor.reason}</td>
                       <td>{formatDate(visitor.created_at)}</td>

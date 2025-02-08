@@ -70,13 +70,13 @@ const Notifications = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 font-mono">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 font-sans">
       <BSidebar />
       {/* Main Content */}
       <div className="flex-1 p-6 bg-gray-50 lg:ml-56 transition-all duration-300">
         <header className="mb-6">
           <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
-          <p className="text-sm text-gray-500 mt-1">Role: {role || 'N/A'}</p>
+          <p className="text-sm text-gray-700 mt-1">Role: {role || 'N/A'}</p>
         </header>
 
         <main>
@@ -112,7 +112,7 @@ const Notifications = () => {
           {/* Visitors Table */}
           <div className="mb-8">
             <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
+              <h2 className="text-lg font-semibold text-gray-700  flex items-center gap-2 mb-4">
                 <IoIosPeople size={20} />
                 Today's Visitors
               </h2>
@@ -143,17 +143,18 @@ const Notifications = () => {
                         <tr
                           key={index}
                           className={`${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}
+                        
                         >
-                          <td className="px-4 py-2">{visitor.name}</td>
-                          <td className="px-4 py-2">{visitor.contact_num}</td>
-                          <td className="px-4 py-2">{visitor.address}</td>
-                          <td className="px-4 py-2">{visitor.visit_purpose}</td>
-                          <td className="px-4 py-2">
+                          <td className="px-4 py-2 text-gray-700">{visitor.name}</td>
+                          <td className="px-4 py-2 text-gray-700">{visitor.contact_num}</td>
+                          <td className="px-4 py-2 text-gray-700">{visitor.address}</td>
+                          <td className="px-4 py-2 text-gray-700">{visitor.visit_purpose}</td>
+                          <td className="px-4 py-2 text-gray-700">
                             {visitor.time_in
                               ? new Date(visitor.time_in).toLocaleTimeString()
                               : 'N/A'}
                           </td>
-                          <td className="px-4 py-2">
+                          <td className="px-4 py-2 text-gray-700">
                             {visitor.time_out
                               ? new Date(visitor.time_out).toLocaleTimeString()
                               : 'N/A'}
@@ -179,7 +180,7 @@ const Notifications = () => {
           {/* Pending List Table */}
           <div>
             <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
+              <h2 className="text-lg font-semibold flex items-center gap-2 mb-4 text-gray-700">
                 <IoIosPeople size={20} />
                 Pending Visitors
               </h2>
@@ -206,10 +207,10 @@ const Notifications = () => {
                           key={index}
                           className={`${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}
                         >
-                          <td className="px-4 py-2">{visitor.name}</td>
-                          <td className="px-4 py-2">{visitor.contact_num}</td>
-                          <td className="px-4 py-2">{visitor.address}</td>
-                          <td className="px-4 py-2">{visitor.visit_purpose}</td>
+                          <td className="px-4 py-2 text-gray-700">{visitor.name}</td>
+                          <td className="px-4 py-2 text-gray-700">{visitor.contact_num}</td>
+                          <td className="px-4 py-2 text-gray-700">{visitor.address}</td>
+                          <td className="px-4 py-2 text-gray-700">{visitor.visit_purpose}</td>
                         </tr>
                       ))
                     ) : (

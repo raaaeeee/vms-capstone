@@ -53,7 +53,7 @@ const Login = () => {
   return (
     <>
       <div
-        className="flex items-center justify-center min-h-screen font-mono"
+        className="flex items-center justify-center min-h-screen font-sans"
         style={{
           backgroundImage: "url('images/csu-bg.jpg')",
           backgroundSize: 'cover',

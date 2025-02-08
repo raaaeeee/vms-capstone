@@ -135,11 +135,15 @@ const BReports = () => {
   }, []);
 
   const exportToPDF = () => {
-    const doc = new jsPDF();
-
+    const doc = new jsPDF({
+      orientation: 'landscape', // More width for better layout
+      unit: 'mm',
+      format: 'a4',
+    });
+  
     doc.setFontSize(12);
-    doc.text('Visitor Archives', 14, 16);
-
+    doc.text('Visitor Archives', 14, 15);
+  
     const tableData = filteredData.map((visitor) => [
       visitor.name,
       visitor.contact_num,
@@ -150,7 +154,7 @@ const BReports = () => {
       visitor.time_out ? extractTimeFromDate(visitor.time_out) : '',
       visitor.date,
     ]);
-
+  
     doc.autoTable({
       head: [
         [
@@ -165,11 +169,31 @@ const BReports = () => {
         ],
       ],
       body: tableData,
-      startY: 30,
+      startY: 25,
+      styles: { fontSize: 8, cellPadding: 2 }, // Consistent styling
+      columnStyles: {
+        0: { cellWidth: 35 }, // Name
+        1: { cellWidth: 30 }, // Contact No.
+        2: { cellWidth: 50 }, // Purpose of Visit
+        3: { cellWidth: 40 }, // Department
+        4: { cellWidth: 30 }, // Vehicle
+        5: { cellWidth: 25 }, // Time In
+        6: { cellWidth: 25 }, // Time Out
+        7: { cellWidth: 30 }, // Date
+      },
+      theme: 'grid',
+      styles: { overflow: 'linebreak' }, // Ensures text wraps properly
+      margin: { top: 20, left: 10, right: 10 },
+      didDrawPage: function (data) {
+        let pageCount = doc.internal.getNumberOfPages();
+        doc.setFontSize(8);
+        doc.text(`Page ${pageCount}`, doc.internal.pageSize.width - 20, doc.internal.pageSize.height - 10);
+      },
     });
-
+  
     doc.save('visitor_archives.pdf');
   };
+  
 
   function extractTimeFromDate(timestamp) {
     const date = new Date(timestamp);
@@ -194,7 +218,7 @@ const BReports = () => {
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 font-mono">
+      <div className="flex flex-col lg:flex-row min-h-screen bg-gray-100 font-sans">
         <BSidebar />
         <main className="flex-1 lg:p-4 ml-0 lg:ml-56 transition-all duration-300">
           <div className="w-full bg-white rounded-lg shadow-lg p-4 lg:p-6">
@@ -204,7 +228,7 @@ const BReports = () => {
                 <span className="mr-2">
                   <RiArchiveStackFill size={30} />
                 </span>
-                <h2 className="text-lg lg:text-xl font-bolder">
+                <h2 className="text-lg lg:text-xl font-bolder text-gray-700">
                   Archives & Report Information
                 </h2>
               </div>
@@ -270,9 +294,9 @@ const BReports = () => {
 
             {/* Visitor Table */}
             <div className="overflow-x-auto">
-              <table className="w-full text-sm sm:text-base table">
+              <table className="w-full text-base sm:text-base table">
                 <thead>
-                  <tr className="border-b">
+                  <tr className="border-b text-gray-700">
                     <th className="text-left p-2">Name</th>
                     <th className="text-left p-2">Contact No.</th>
                     <th className="text-left p-2">Vehicle</th>
@@ -284,7 +308,7 @@ const BReports = () => {
                 </thead>
                 <tbody>
                   {filteredData.map((visitor) => (
-                    <tr key={visitor.id} className="border-b">
+                    <tr key={visitor.id} className="border-b text-gray-700">
                       <td>{visitor.name}</td>
                       <td>{visitor.contact_num}</td>
                       <td>{visitor.vehicle}</td>
