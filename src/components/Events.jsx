@@ -174,7 +174,7 @@ const Events = () => {
       <Sidebar />
 
       <main className="flex-1 p-4 lg:p-6 ml-0 lg:ml-56 transition-all duration-300">
-        <h1 className="text-2xl font-bold mb-6">Create Event</h1>
+        <h1 className="text-2xl font-bold mb-6">Event Management</h1>
 
         {/* Error message */}
         {errorMessage && (
