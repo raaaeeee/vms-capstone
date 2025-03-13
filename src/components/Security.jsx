@@ -256,7 +256,7 @@ const Security = () => {
 
           {activeTab === 'blocklist' && (
             <div className="w-full bg-white rounded-lg shadow-lg p-4 lg:p-6">
-              <div className="overflow-x-auto max-h-60 overflow-y-auto">
+              <div className="overflow-x-auto max-h-80 overflow-y-auto">
                 <table className="w-full table table-auto">
                   <thead>
                     <tr className="border-b text-black">

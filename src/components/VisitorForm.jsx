@@ -54,7 +54,7 @@ const VisitorForm = () => {
     >
       <div className="absolute inset-0 bg-black bg-opacity-60"></div>
       <div className="bg-opacity-90 shadow-lg rounded-lg p-6 w-full max-w-md relative z-10 backdrop-blur-sm bg-white/40 border border-white/40">
-        <h1 className="text-3xl font-semibold text-center text-white mb-6">
+        <h1 className="text-3xl font-bold text-center text-white mb-6">
           Visitor Log
         </h1>
         <hr />

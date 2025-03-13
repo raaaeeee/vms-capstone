@@ -145,7 +145,7 @@ const Visitors = () => {
             <div className="overflow-x-auto">
               <table className="w-full table">
                 <thead>
-                  <tr className="border-b">
+                  <tr className="border-b text-gray-700">
                     <th className="text-left p-2">Name</th>
                     <th className="text-left p-2">Contact No.</th>
                     <th className="text-left p-1">Purpose of Visit</th>
@@ -165,14 +165,14 @@ const Visitors = () => {
                     <tr>
                       <td
                         colSpan="8"
-                        className="text-center p-3 text-gray-400 font-bold italic"
+                        className="text-center p-3 text-gray-800 font-bold italic"
                       >
                         No Visitors today
                       </td>
                     </tr>
                   )}
                   {visitorsData.map((visitor, index) => (
-                    <tr key={index} className="border-b">
+                    <tr key={index} className="border-b text-gray-700">
                       <td className="p-2">{visitor.name}</td>
                       <td className="p-2">{visitor.contact_num}</td>
                       <td className="p-1">{visitor.visit_purpose}</td>
@@ -206,7 +206,7 @@ const Visitors = () => {
             <div className="overflow-x-auto">
               <table className="w-full table">
                 <thead>
-                  <tr className="border-b">
+                  <tr className="border-b text-gray-700">
                     <th className="text-left p-2">Organization Name</th>
                     <th className="text-left p-2">Contact No.</th>
                     <th className="text-left p-1">Purpose of Visit</th>
@@ -226,14 +226,14 @@ const Visitors = () => {
                     <tr>
                       <td
                         colSpan="8"
-                        className="text-center p-3 text-gray-400 font-bold italic"
+                        className="text-center p-3 text-gray-800 font-bold italic"
                       >
                         No Visitors today
                       </td>
                     </tr>
                   )}
                   {visitorsData.map((visitor, index) => (
-                    <tr key={index} className="border-b">
+                    <tr key={index} className="border-b text-gray-700">
                       <td className="p-2">{visitor.name}</td>
                       <td className="p-2">{visitor.contact_num}</td>
                       <td className="p-1">{visitor.visit_purpose}</td>
@@ -267,7 +267,7 @@ const Visitors = () => {
             <div className="overflow-x-auto">
               <table className="w-full table">
                 <thead>
-                  <tr className="border-b">
+                  <tr className="border-b text-gray-700">
                     <th className="text-left p-2">Representative Name</th>
                     <th className="text-left p-2">VIP Name</th>
                     <th className="text-left p-2">Contact No.</th>
@@ -288,14 +288,14 @@ const Visitors = () => {
                     <tr>
                       <td
                         colSpan="8"
-                        className="text-center p-3 text-gray-400 font-bold italic"
+                        className="text-center p-3 text-gray-800 font-bold italic"
                       >
                         No Visitors today
                       </td>
                     </tr>
                   )}
                   {visitorsData.map((visitor, index) => (
-                    <tr key={index} className="border-b">
+                    <tr key={index} className="border-b text-gray-700">
                       <td className="p-2">{visitor.name}</td>
                       <td className="p-2">{visitor.vipname}</td>
                       <td className="p-2">{visitor.contact_num}</td>
@@ -330,7 +330,7 @@ const Visitors = () => {
             <div className="overflow-x-auto">
               <table className="w-full table">
                 <thead>
-                  <tr className="border-b">
+                  <tr className="border-b text-gray-700">
                     <th className="text-left p-2">Name</th>
                     <th className="text-left p-2">Contact No.</th>
                     <th className="text-left p-2">Purpose of Visit</th>
@@ -350,14 +350,14 @@ const Visitors = () => {
                     <tr>
                       <td
                         colSpan="8"
-                        className="text-center p-3 text-gray-400 font-bold italic"
+                        className="text-center p-3 text-gray-800 font-bold italic"
                       >
                         No Visitors today
                       </td>
                     </tr>
                   )}
                   {visitorsData.map((visitor, index) => (
-                    <tr key={index} className="border-b">
+                    <tr key={index} className="border-b text-gray-700">
                       <td className="p-2">{visitor.name}</td>
                       <td className="p-2">{visitor.contact_num}</td>
                       <td className="p-2">{visitor.visit_purpose}</td>
@@ -384,7 +384,7 @@ const Visitors = () => {
             <div className="overflow-x-auto">
               <table className="w-full table">
                 <thead>
-                  <tr className="border-b">
+                  <tr className="border-b text-gray-700">
                     <th className="text-left p-2">Name</th>
                     <th className="text-left p-2">Contact No.</th>
                     <th className="text-left p-2">Purpose of Visit</th>
@@ -404,14 +404,14 @@ const Visitors = () => {
                     <tr>
                       <td
                         colSpan="8"
-                        className="text-center p-3 text-gray-400 font-bold italic"
+                        className="text-center p-3 text-gray-800 font-bold italic"
                       >
                         No Visitors today
                       </td>
                     </tr>
                   )}
                   {visitorsData.map((visitor, index) => (
-                    <tr key={index} className="border-b">
+                    <tr key={index} className="border-b text-gray-700">
                       <td className="p-2">{visitor.name}</td>
                       <td className="p-2">{visitor.contact_num}</td>
                       <td className="p-2">{visitor.visit_purpose}</td>
@@ -438,7 +438,7 @@ const Visitors = () => {
             <div className="overflow-x-auto">
               <table className="w-full table">
                 <thead>
-                  <tr className="border-b">
+                  <tr className="border-b text-gray-700">
                     <th className="text-left p-2">Name</th>
                     <th className="text-left p-2">Contact No.</th>
                     <th className="text-left p-2">Purpose of Visit</th>
@@ -458,14 +458,14 @@ const Visitors = () => {
                     <tr>
                       <td
                         colSpan="8"
-                        className="text-center p-3 text-gray-400 font-bold italic"
+                        className="text-center p-3 text-gray-800 font-bold italic"
                       >
                         No Visitors today
                       </td>
                     </tr>
                   )}
                   {visitorsData.map((visitor, index) => (
-                    <tr key={index} className="border-b">
+                    <tr key={index} className="border-b text-gray-700">
                       <td className="p-2">{visitor.name}</td>
                       <td className="p-2">{visitor.contact_num}</td>
                       <td className="p-2">{visitor.visit_purpose}</td>

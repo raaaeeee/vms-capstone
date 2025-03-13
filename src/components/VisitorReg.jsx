@@ -291,14 +291,20 @@ const VisitorReg = () => {
 
   return (
     <>     
-      <div className="flex items-center justify-center min-h-screen bg-green-900 font-mono px-4 sm:px-0">
-      <div className="w-full sm:w-3/4 lg:w-2/5 p-5 bg-white rounded-lg">
-        <div className="flex flex-col sm:flex-row items-center gap-4">
-    <h1 className="text-2xl sm:text-3xl font-bold text-center flex-1">
+      <div className="relative flex items-center justify-center min-h-screen bg-cover bg-center font-sans "
+      style={{
+        backgroundImage: "url('images/csu-bg.jpg')",
+      }}>
+       
+      <div className="absolute inset-0 bg-black bg-opacity-60"></div>
+      <div className="relative z-10 w-full sm:w-3/4 lg:w-2/5 p-5 rounded-lg shadow-lg 
+                  bg-white/30 backdrop-blur-md border border-white/20">
+    <div className="flex flex-col sm:flex-row items-center gap-4">
+    <h1 className="text-2xl sm:text-3xl font-bold text-white text-center flex-1">
       Visitor Registration
     </h1>
     <select
-      className="select select-bordered w-full sm:w-48"
+      className="select select-bordered w-full sm:w-48 mb-4"
       onChange={(e) => setVisitorType(e.target.value)}
     >
       <option disabled selected>
@@ -321,7 +327,7 @@ const VisitorReg = () => {
                     <FaUser className="h-5 w-5 opacity-70" />
                     <input
                       type="text"
-                      className="grow py-2"
+                      className="grow py-2 text-white"
                       placeholder="Fullname"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
@@ -360,7 +366,7 @@ const VisitorReg = () => {
                 <div>
                   <label
                     htmlFor="purpose"
-                    className="block text-sm text-gray-700 mb-1 font-bold"
+                    className="block text-sm text-white mb-1 font-bold"
                   >
                     Purpose of Visit
                   </label>
@@ -390,13 +396,13 @@ const VisitorReg = () => {
                     <option>CMNS</option>
                     <option>COFES</option>
                   </select>
-                  <label className="text-sm text-gray-700 font-bold mb-2">
+                  <label className="text-sm text-white font-bold mb-2">
                     Appointment
                     <input
                       onChange={(e) => setDate(e.target.value)}
                       placeholder="Select Date of Appointment"
                       type="date"
-                      class="ms-2 px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue"
+                      class="ms-2 px-4 py-2 border rounded-md text-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue"
                     />
                   </label>
                 </div>
@@ -485,7 +491,7 @@ const VisitorReg = () => {
                 <div>
                   <label
                     htmlFor="purpose"
-                    className="block text-sm text-gray-700 mb-1 font-bold"
+                    className="block text-sm text-white mb-1 font-bold"
                   >
                     Purpose of Visit
                   </label>
@@ -515,7 +521,7 @@ const VisitorReg = () => {
                     <option>CMNS</option>
                     <option>COFES</option>
                   </select>
-                  <label className="text-sm text-gray-700 font-bold mb-2">
+                  <label className="text-sm text-white font-bold mb-2">
                     Appointment
                     <input
                       onChange={(e) => setDate(e.target.value)}
@@ -610,7 +616,7 @@ const VisitorReg = () => {
                 <div>
                   <label
                     htmlFor="purpose"
-                    className="block text-sm text-gray-700 mb-1 font-bold"
+                    className="block text-sm text-white mb-1 font-bold"
                   >
                     Purpose of Visit
                   </label>
@@ -640,7 +646,7 @@ const VisitorReg = () => {
                     <option>CMNS</option>
                     <option>COFES</option>
                   </select>
-                  <label className="text-sm text-gray-700 font-bold mb-2">
+                  <label className="text-sm text-white font-bold mb-2">
                     Appointment
                     <input
                       onChange={(e) => setDate(e.target.value)}
@@ -759,7 +765,7 @@ const VisitorReg = () => {
                       required
                     />
                   </label>
-                  <label className="text-sm text-gray-700 font-bold mb-2 flex-1">
+                  <label className="text-sm text-white font-bold mb-2 flex-1">
                     Appointment
                     <input
                       onChange={(e) => setDate(e.target.value)}
@@ -772,7 +778,7 @@ const VisitorReg = () => {
                 <div>
                   <label
                     htmlFor="purpose"
-                    className="block text-sm text-gray-700 mb-1 font-bold"
+                    className="block text-sm text-white mb-1 font-bold"
                   >
                     Purpose of Visit
                   </label>
@@ -828,7 +834,7 @@ const VisitorReg = () => {
                 </div>
                 <div>
                   <label className="label">
-                    <span className="label-text">
+                    <span className="label-text text-white">
                       Upload list of people visiting
                     </span>
                   </label>
@@ -914,7 +920,7 @@ const VisitorReg = () => {
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-700 font-bold mb-2">
+                  <label className="text-sm text-white font-bold mb-2">
                     Appointment
                     <input
                       onChange={(e) => setDate(e.target.value)}
@@ -927,7 +933,7 @@ const VisitorReg = () => {
                 <div>
                   <label
                     htmlFor="purpose"
-                    className="block text-sm text-gray-700 mb-1 font-bold"
+                    className="block text-sm text-white mb-1 font-bold"
                   >
                     Purpose of Visit
                   </label>
@@ -1011,7 +1017,7 @@ const VisitorReg = () => {
                 </div>
                 <div>
                   <label className="label">
-                    <span className="label-text">
+                    <span className="label-text text-white">
                       Upload list of people visiting
                     </span>
                   </label>
@@ -1096,7 +1102,7 @@ const VisitorReg = () => {
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm text-gray-700 font-bold mb-2">
+                  <label className="text-sm text-white font-bold mb-2">
                     Appointment
                     <input
                       onChange={(e) => setDate(e.target.value)}
@@ -1109,7 +1115,7 @@ const VisitorReg = () => {
                 <div>
                   <label
                     htmlFor="purpose"
-                    className="block text-sm text-gray-700 mb-1 font-bold"
+                    className="block text-sm text-white mb-1 font-bold"
                   >
                     Purpose of Visit
                   </label>
@@ -1193,7 +1199,7 @@ const VisitorReg = () => {
                 </div>
                 <div>
                   <label className="label">
-                    <span className="label-text">
+                    <span className="label-text text-white">
                       Upload list of people visiting
                     </span>
                   </label>

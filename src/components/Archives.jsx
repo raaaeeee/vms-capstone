@@ -75,14 +75,21 @@ const Archives = () => {
 
   const exportToPDF = () => {
     const doc = new jsPDF({
-      orientation: 'landscape', // Set the orientation to landscape for more width
+      orientation: 'landscape', // Landscape orientation for more width
       unit: 'mm',
       format: 'a4',
     });
-
-    doc.setFontSize(10);
-    doc.text('Visitor Archives', 14, 15);
-
+  
+    doc.setFont("helvetica", "bold"); // Set font to bold
+    doc.setFontSize(16); // Increase font size for title
+    
+    // Calculate center position for text
+    const pageWidth = doc.internal.pageSize.width;
+    const textWidth = doc.getTextWidth("Visitor Archives");
+    const centerX = (pageWidth - textWidth) / 2;
+  
+    doc.text("Visitor Archives", centerX, 15); // Centered title
+  
     const tableData = filteredData.map((visitor) => [
       visitor.name,
       visitor.contact_num,
@@ -93,7 +100,7 @@ const Archives = () => {
       visitor.time_out ? new Date(visitor.time_out).toLocaleTimeString() : '',
       visitor.date,
     ]);
-
+  
     doc.autoTable({
       head: [
         [
@@ -111,23 +118,23 @@ const Archives = () => {
       startY: 30,
       styles: { fontSize: 8, cellPadding: 2 }, // Reduce font size and padding
       columnStyles: {
-        0: { cellWidth: 'auto' }, // Name
-        1: { cellWidth: 'auto' }, // Contact No.
-        2: { cellWidth: 'auto' }, // Purpose of Visit
-        3: { cellWidth: 'auto' }, // Department
-        4: { cellWidth: 'auto' }, // Vehicle
-        5: { cellWidth: 'auto' }, // Time In
-        6: { cellWidth: 'auto' }, // Time Out
-        7: { cellWidth: 'auto' }, // Date
+        0: { cellWidth: 'auto' },
+        1: { cellWidth: 'auto' },
+        2: { cellWidth: 'auto' },
+        3: { cellWidth: 'auto' },
+        4: { cellWidth: 'auto' },
+        5: { cellWidth: 'auto' },
+        6: { cellWidth: 'auto' },
+        7: { cellWidth: 'auto' },
       },
-      theme: 'grid', // Grid for better readability
-      styles: { overflow: 'linebreak' }, // Ensures text wraps properly
+      theme: 'grid',
+      styles: { overflow: 'linebreak' }, // Ensure text wraps properly
       margin: { top: 20, left: 10, right: 10 },
     });
-
+  
     doc.save('visitor_archives.pdf');
   };
-
+  
   useEffect(() => {
     if (!search) {
       setFilteredData(visitorsData);
@@ -191,7 +198,7 @@ const Archives = () => {
                 </svg>
               </label>
               <button
-                className="w-full sm:w-auto px-4 py-2 font-medium text-white bg-orange-500 rounded hover:bg-orange-400 flex items-center justify-center"
+                className="w-full sm:w-auto px-4 py-2 font-medium text-white bg-red-500 rounded hover:bg-red-800 flex items-center justify-center"
                 onClick={exportToPDF}
               >
                 <FaFilePdf className="me-1" size={22} />

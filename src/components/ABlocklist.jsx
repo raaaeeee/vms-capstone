@@ -83,7 +83,8 @@ const ABlocklist = () => {
       unit: 'mm',
       format: 'a4',
     });
-    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold"); // Set font to bold
+    doc.setFontSize(16); // Increase font size for title
     doc.text('Blocklist', 14, 16);
     const tableData = filteredData.map((visitor) => [
       visitor.name,
@@ -150,7 +151,7 @@ const ABlocklist = () => {
                   </svg>
                 </label>
                 <button
-                  className="w-full sm:w-auto px-4 py-2 font-medium text-white bg-orange-500 rounded hover:bg-orange-400 flex items-center justify-center"
+                  className="w-full sm:w-auto px-4 py-2 font-medium text-white bg-red-500 rounded hover:bg-red-800 flex items-center justify-center"
                   onClick={exportToPDF}
                 >
                   <FaFilePdf className="me-1" size={22} />

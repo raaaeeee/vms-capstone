@@ -102,7 +102,7 @@ const Events = () => {
                 <span className="mr-2">
                   <MdEventAvailable size={30} />
                 </span>
-                <h2 className="text-lg lg:text-xl font-bold">Create Event</h2>
+                <h2 className="text-lg lg:text-xl text-gray-700 font-bold">Create Event</h2>
               </div>
 
               <form onSubmit={handleSubmit}>
@@ -195,7 +195,7 @@ const Events = () => {
               </form>
             </div>
 
-            <div className="w-full bg-white rounded-lg shadow-lg p-4">
+            <div className="w-full bg-white rounded-lg shadow-lg p-4 ">
               <Calendar
                 localizer={localizer}
                 events={mappedEvents}
